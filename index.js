@@ -6,7 +6,7 @@ import { microsubController } from "./lib/controllers/microsub.js";
 import { readerController } from "./lib/controllers/reader.js";
 import { handleMediaProxy } from "./lib/media/proxy.js";
 import { startScheduler, stopScheduler } from "./lib/polling/scheduler.js";
-import { createIndexes } from "./lib/storage/items.js";
+import { cleanupAllReadItems, createIndexes } from "./lib/storage/items.js";
 import { webmentionReceiver } from "./lib/webmention/receiver.js";
 import { websubHandler } from "./lib/websub/handler.js";
 
@@ -156,6 +156,11 @@ export default class MicrosubEndpoint {
       // Create indexes for optimal performance (runs in background)
       createIndexes(indiekit).catch((error) => {
         console.warn("[Microsub] Index creation failed:", error.message);
+      });
+
+      // Cleanup old read items on startup
+      cleanupAllReadItems(indiekit).catch((error) => {
+        console.warn("[Microsub] Startup cleanup failed:", error.message);
       });
     } else {
       console.warn(

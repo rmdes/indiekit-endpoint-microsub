@@ -1,6 +1,6 @@
 {
   "name": "@rmdes/indiekit-endpoint-microsub",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Microsub endpoint for Indiekit. Enables subscribing to feeds and reading content using the Microsub protocol.",
   "keywords": [
     "indiekit",
