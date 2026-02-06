@@ -1,0 +1,17 @@
+{% extends "document.njk" %}
+
+{% block main %}
+<article class="main__container -!-container">
+  <header class="heading">
+    <h1 class="heading__title">
+      {{ __("microsub.error.notFound.title") | default("Not found") }}
+    </h1>
+  </header>
+  {{ prose({ text: __("microsub.error.notFound.description") | default("The item you're looking for could not be found.") }) }}
+  <p>
+    <a href="{{ baseUrl }}/channels" class="button button--secondary">
+      {{ __("microsub.reader.backToChannels") | default("Back to channels") }}
+    </a>
+  </p>
+</article>
+{% endblock %}

@@ -1,0 +1,10 @@
+{# Timeline of items #}
+<div class="timeline">
+  {% if items.length > 0 %}
+  {% for item in items %}
+  {% include "partials/item-card.njk" %}
+  {% endfor %}
+  {% else %}
+  {{ prose({ text: __("microsub.timeline.empty") }) }}
+  {% endif %}
+</div>

@@ -1,0 +1,15 @@
+{# Item action buttons #}
+<div class="item-actions">
+  <a href="{{ baseUrl }}/compose?replyTo={{ itemUrl | urlencode }}" class="item-actions__button" title="{{ __('microsub.item.reply') }}">
+    {{ icon("reply") }}
+  </a>
+  <a href="{{ baseUrl }}/compose?likeOf={{ itemUrl | urlencode }}" class="item-actions__button" title="{{ __('microsub.item.like') }}">
+    {{ icon("like") }}
+  </a>
+  <a href="{{ baseUrl }}/compose?repostOf={{ itemUrl | urlencode }}" class="item-actions__button" title="{{ __('microsub.item.repost') }}">
+    {{ icon("repost") }}
+  </a>
+  <a href="{{ itemUrl }}" class="item-actions__button" target="_blank" rel="noopener" title="{{ __('microsub.item.viewOriginal') }}">
+    {{ icon("public") }}
+  </a>
+</div>

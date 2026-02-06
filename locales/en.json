@@ -1,14 +1,88 @@
 {
   "microsub": {
-    "title": "Microsub",
+    "reader": {
+      "title": "Reader",
+      "empty": "No items to display",
+      "markAllRead": "Mark all as read",
+      "newer": "Newer",
+      "older": "Older"
+    },
     "channels": {
-      "title": "Channels"
+      "title": "Channels",
+      "name": "Channel name",
+      "new": "New channel",
+      "create": "Create channel",
+      "delete": "Delete channel",
+      "settings": "Channel settings",
+      "empty": "No channels yet. Create one to get started.",
+      "notifications": "Notifications"
     },
     "timeline": {
-      "title": "Timeline"
+      "title": "Timeline",
+      "empty": "No items in this channel",
+      "markRead": "Mark as read",
+      "markUnread": "Mark as unread",
+      "remove": "Remove"
+    },
+    "feeds": {
+      "title": "Feeds",
+      "follow": "Follow",
+      "subscribe": "Subscribe to a feed",
+      "unfollow": "Unfollow",
+      "empty": "No feeds followed in this channel",
+      "url": "Feed URL",
+      "urlPlaceholder": "https://example.com/feed.xml"
+    },
+    "item": {
+      "reply": "Reply",
+      "like": "Like",
+      "repost": "Repost",
+      "bookmark": "Bookmark",
+      "viewOriginal": "View original"
+    },
+    "compose": {
+      "title": "Compose",
+      "content": "What's on your mind?",
+      "submit": "Post",
+      "cancel": "Cancel",
+      "replyTo": "Replying to",
+      "likeOf": "Liking",
+      "repostOf": "Reposting",
+      "bookmarkOf": "Bookmarking"
+    },
+    "settings": {
+      "title": "{{channel}} settings",
+      "excludeTypes": "Exclude interaction types",
+      "excludeTypesHelp": "Select types of posts to hide from this channel",
+      "excludeRegex": "Exclude pattern",
+      "excludeRegexHelp": "Regular expression to filter out matching content",
+      "save": "Save settings",
+      "dangerZone": "Danger zone",
+      "deleteWarning": "Deleting this channel will permanently remove all feeds and items. This action cannot be undone.",
+      "deleteConfirm": "Are you sure you want to delete this channel and all its content?",
+      "delete": "Delete channel",
+      "types": {
+        "like": "Likes",
+        "repost": "Reposts",
+        "bookmark": "Bookmarks",
+        "reply": "Replies",
+        "checkin": "Check-ins"
+      }
+    },
+    "search": {
+      "title": "Search",
+      "placeholder": "Enter URL or search term",
+      "submit": "Search",
+      "noResults": "No results found"
+    },
+    "preview": {
+      "title": "Preview",
+      "subscribe": "Subscribe to this feed"
     },
     "error": {
       "channelNotFound": "Channel not found",
+      "feedNotFound": "Feed not found",
+      "invalidUrl": "Invalid URL",
       "invalidAction": "Invalid action"
     }
   }

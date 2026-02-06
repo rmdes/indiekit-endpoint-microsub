@@ -1,0 +1,31 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="channel-new">
+    <a href="{{ baseUrl }}/channels" class="back-link">
+      {{ icon("previous") }} {{ __("microsub.channels.title") }}
+    </a>
+
+    <h2>{{ __("microsub.channels.new") }}</h2>
+
+    <form method="post" action="{{ baseUrl }}/channels/new">
+      {{ input({
+        id: "name",
+        name: "name",
+        label: __("microsub.channels.name"),
+        required: true,
+        autocomplete: "off",
+        attributes: { autofocus: true }
+      }) }}
+
+      <div class="button-group">
+        {{ button({
+          text: __("microsub.channels.create")
+        }) }}
+        <a href="{{ baseUrl }}/channels" class="button button--secondary">
+          {{ __("Cancel") }}
+        </a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

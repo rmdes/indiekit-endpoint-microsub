@@ -1,0 +1,75 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="settings">
+    <a href="{{ baseUrl }}/channels/{{ channel.uid }}" class="back-link">
+      {{ icon("previous") }} {{ channel.name }}
+    </a>
+
+    <h2>{{ __("microsub.settings.title", { channel: channel.name }) }}</h2>
+
+    <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/settings">
+      {{ checkboxes({
+        name: "excludeTypes",
+        values: channel.settings.excludeTypes,
+        fieldset: {
+          legend: __("microsub.settings.excludeTypes")
+        },
+        hint: __("microsub.settings.excludeTypesHelp"),
+        items: [
+          {
+            label: __("microsub.settings.types.like"),
+            value: "like"
+          },
+          {
+            label: __("microsub.settings.types.repost"),
+            value: "repost"
+          },
+          {
+            label: __("microsub.settings.types.bookmark"),
+            value: "bookmark"
+          },
+          {
+            label: __("microsub.settings.types.reply"),
+            value: "reply"
+          },
+          {
+            label: __("microsub.settings.types.checkin"),
+            value: "checkin"
+          }
+        ]
+      }) }}
+
+      {{ input({
+        id: "excludeRegex",
+        name: "excludeRegex",
+        label: __("microsub.settings.excludeRegex"),
+        hint: __("microsub.settings.excludeRegexHelp"),
+        value: channel.settings.excludeRegex
+      }) }}
+
+      <div class="button-group">
+        {{ button({
+          text: __("microsub.settings.save")
+        }) }}
+        <a href="{{ baseUrl }}/channels/{{ channel.uid }}" class="button button--secondary">
+          {{ __("Cancel") }}
+        </a>
+      </div>
+    </form>
+
+    {% if channel.uid !== "notifications" %}
+    <hr class="divider">
+    <div class="danger-zone">
+      <h3>{{ __("microsub.settings.dangerZone") }}</h3>
+      <p class="hint">{{ __("microsub.settings.deleteWarning") }}</p>
+      <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/delete" onsubmit="return confirm('{{ __("microsub.settings.deleteConfirm") }}');">
+        {{ button({
+          text: __("microsub.settings.delete"),
+          classes: "button--danger"
+        }) }}
+      </form>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

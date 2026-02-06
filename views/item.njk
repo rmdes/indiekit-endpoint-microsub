@@ -1,0 +1,151 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <article class="item">
+    <a href="{{ backUrl or (baseUrl + '/channels') }}" class="back-link">
+      {{ icon("previous") }} {{ __("Back") }}
+    </a>
+
+    {% if item.author %}
+    <header class="item__author">
+      {% if item.author.photo %}
+      <img src="{{ item.author.photo }}"
+           alt=""
+           class="item__author-photo"
+           width="48"
+           height="48"
+           loading="lazy"
+           onerror="this.style.display='none'">
+      {% endif %}
+      <div class="item__author-info">
+        <span class="item__author-name">
+          {% if item.author.url %}
+          <a href="{{ item.author.url }}" target="_blank" rel="noopener">{{ item.author.name or item.author.url }}</a>
+          {% else %}
+          {{ item.author.name or "Unknown" }}
+          {% endif %}
+        </span>
+        {% if item.published %}
+        <time datetime="{{ item.published }}" class="item__date">
+          {{ item.published | date("PPPp", { locale: locale, timeZone: application.timeZone }) }}
+        </time>
+        {% endif %}
+      </div>
+    </header>
+    {% endif %}
+
+    {# Context for interactions #}
+    {% if item["in-reply-to"] or item["like-of"] or item["repost-of"] or item["bookmark-of"] %}
+    <div class="item__context">
+      {% if item["in-reply-to"] and item["in-reply-to"].length > 0 %}
+      <p class="item__context-label">
+        {{ icon("reply") }} {{ __("Reply to") }}:
+        <a href="{{ item['in-reply-to'][0] }}" target="_blank" rel="noopener">
+          {{ item["in-reply-to"][0] | replace("https://", "") | replace("http://", "") }}
+        </a>
+      </p>
+      {% endif %}
+      {% if item["like-of"] and item["like-of"].length > 0 %}
+      <p class="item__context-label">
+        {{ icon("like") }} {{ __("Liked") }}:
+        <a href="{{ item['like-of'][0] }}" target="_blank" rel="noopener">
+          {{ item["like-of"][0] | replace("https://", "") | replace("http://", "") }}
+        </a>
+      </p>
+      {% endif %}
+      {% if item["repost-of"] and item["repost-of"].length > 0 %}
+      <p class="item__context-label">
+        {{ icon("repost") }} {{ __("Reposted") }}:
+        <a href="{{ item['repost-of'][0] }}" target="_blank" rel="noopener">
+          {{ item["repost-of"][0] | replace("https://", "") | replace("http://", "") }}
+        </a>
+      </p>
+      {% endif %}
+      {% if item["bookmark-of"] and item["bookmark-of"].length > 0 %}
+      <p class="item__context-label">
+        {{ icon("bookmark") }} {{ __("Bookmarked") }}:
+        <a href="{{ item['bookmark-of'][0] }}" target="_blank" rel="noopener">
+          {{ item["bookmark-of"][0] | replace("https://", "") | replace("http://", "") }}
+        </a>
+      </p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if item.name %}
+    <h2 class="item__title">{{ item.name }}</h2>
+    {% endif %}
+
+    {% if item.content %}
+    <div class="item__content prose">
+      {% if item.content.html %}
+      {{ item.content.html | safe }}
+      {% else %}
+      {{ item.content.text }}
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {# Categories #}
+    {% if item.category and item.category.length > 0 %}
+    <div class="item-card__categories">
+      {% for cat in item.category %}
+      <span class="item-card__category">#{{ cat | replace("#", "") }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {# Photos #}
+    {% if item.photo and item.photo.length > 0 %}
+    <div class="item__photos">
+      {% for photo in item.photo %}
+      <a href="{{ photo }}" target="_blank" rel="noopener">
+        <img src="{{ photo }}" alt="" class="item__photo" loading="lazy">
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {# Video #}
+    {% if item.video and item.video.length > 0 %}
+    <div class="item__media">
+      {% for video in item.video %}
+      <video src="{{ video }}"
+             controls
+             preload="metadata"
+             {% if item.photo and item.photo.length > 0 %}poster="{{ item.photo[0] }}"{% endif %}>
+      </video>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {# Audio #}
+    {% if item.audio and item.audio.length > 0 %}
+    <div class="item__media">
+      {% for audio in item.audio %}
+      <audio src="{{ audio }}" controls preload="metadata"></audio>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <footer class="item__actions">
+      {% if item.url %}
+      <a href="{{ item.url }}" class="button button--secondary button--small" target="_blank" rel="noopener">
+        {{ icon("external") }} {{ __("microsub.item.viewOriginal") }}
+      </a>
+      {% endif %}
+      <a href="{{ baseUrl }}/compose?reply={{ item.url | urlencode }}" class="button button--secondary button--small">
+        {{ icon("reply") }} {{ __("microsub.item.reply") }}
+      </a>
+      <a href="{{ baseUrl }}/compose?like={{ item.url | urlencode }}" class="button button--secondary button--small">
+        {{ icon("like") }} {{ __("microsub.item.like") }}
+      </a>
+      <a href="{{ baseUrl }}/compose?repost={{ item.url | urlencode }}" class="button button--secondary button--small">
+        {{ icon("repost") }} {{ __("microsub.item.repost") }}
+      </a>
+      <a href="{{ baseUrl }}/compose?bookmark={{ item.url | urlencode }}" class="button button--secondary button--small">
+        {{ icon("bookmark") }} {{ __("microsub.item.bookmark") }}
+      </a>
+    </footer>
+  </article>
+{% endblock %}

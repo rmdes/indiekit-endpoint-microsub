@@ -1,0 +1,17 @@
+{# Author display #}
+{% if author %}
+<div class="author">
+  {% if author.photo %}
+  <img src="{{ author.photo }}" alt="" class="author__photo" width="48" height="48" loading="lazy">
+  {% endif %}
+  <div class="author__info">
+    <span class="author__name">
+      {% if author.url %}
+      <a href="{{ author.url }}">{{ author.name or author.url }}</a>
+      {% else %}
+      {{ author.name or "Unknown" }}
+      {% endif %}
+    </span>
+  </div>
+</div>
+{% endif %}

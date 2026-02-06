@@ -1,0 +1,69 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="feeds">
+    <header class="feeds__header">
+      <a href="{{ baseUrl }}/channels/{{ channel.uid }}" class="back-link">
+        {{ icon("previous") }} {{ channel.name }}
+      </a>
+    </header>
+
+    <h2>{{ __("microsub.feeds.title") }}</h2>
+
+    {% if feeds.length > 0 %}
+    <div class="feeds__list">
+      {% for feed in feeds %}
+      <div class="feeds__item">
+        <div class="feeds__info">
+          {% if feed.photo %}
+          <img src="{{ feed.photo }}"
+               alt=""
+               class="feeds__photo"
+               width="48"
+               height="48"
+               loading="lazy"
+               onerror="this.style.display='none'">
+          {% endif %}
+          <div class="feeds__details">
+            <span class="feeds__name">{{ feed.title or feed.url }}</span>
+            <a href="{{ feed.url }}" class="feeds__url" target="_blank" rel="noopener">
+              {{ feed.url | replace("https://", "") | replace("http://", "") }}
+            </a>
+          </div>
+        </div>
+        <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/remove" class="feeds__actions">
+          <input type="hidden" name="url" value="{{ feed.url }}">
+          {{ button({
+            text: __("microsub.feeds.unfollow"),
+            classes: "button--secondary button--small"
+          }) }}
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="reader__empty">
+      {{ icon("syndicate") }}
+      <p>{{ __("microsub.feeds.empty") }}</p>
+    </div>
+    {% endif %}
+
+    <div class="feeds__add">
+      <h3>{{ __("microsub.feeds.follow") }}</h3>
+      <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds" class="feeds__form">
+        {{ input({
+          id: "url",
+          name: "url",
+          label: __("microsub.feeds.url"),
+          type: "url",
+          required: true,
+          placeholder: __("microsub.feeds.urlPlaceholder"),
+          autocomplete: "off"
+        }) }}
+        <div class="button-group">
+          {{ button({ text: __("microsub.feeds.follow") }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

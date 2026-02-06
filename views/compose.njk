@@ -1,0 +1,98 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="compose">
+    <a href="{{ backUrl or (baseUrl + '/channels') }}" class="back-link">
+      {{ icon("previous") }} {{ __("Back") }}
+    </a>
+
+    <h2>{{ __("microsub.compose.title") }}</h2>
+
+    {% if replyTo and replyTo is string %}
+    <div class="compose__context">
+      {{ icon("reply") }} {{ __("microsub.compose.replyTo") }}:
+      <a href="{{ replyTo }}" target="_blank" rel="noopener">
+        {{ replyTo | replace("https://", "") | replace("http://", "") }}
+      </a>
+    </div>
+    {% endif %}
+
+    {% if likeOf and likeOf is string %}
+    <div class="compose__context">
+      {{ icon("like") }} {{ __("microsub.compose.likeOf") }}:
+      <a href="{{ likeOf }}" target="_blank" rel="noopener">
+        {{ likeOf | replace("https://", "") | replace("http://", "") }}
+      </a>
+    </div>
+    {% endif %}
+
+    {% if repostOf and repostOf is string %}
+    <div class="compose__context">
+      {{ icon("repost") }} {{ __("microsub.compose.repostOf") }}:
+      <a href="{{ repostOf }}" target="_blank" rel="noopener">
+        {{ repostOf | replace("https://", "") | replace("http://", "") }}
+      </a>
+    </div>
+    {% endif %}
+
+    {% if bookmarkOf and bookmarkOf is string %}
+    <div class="compose__context">
+      {{ icon("bookmark") }} {{ __("microsub.compose.bookmarkOf") }}:
+      <a href="{{ bookmarkOf }}" target="_blank" rel="noopener">
+        {{ bookmarkOf | replace("https://", "") | replace("http://", "") }}
+      </a>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{{ baseUrl }}/compose">
+      {% if replyTo %}
+      <input type="hidden" name="in-reply-to" value="{{ replyTo }}">
+      {% endif %}
+      {% if likeOf %}
+      <input type="hidden" name="like-of" value="{{ likeOf }}">
+      {% endif %}
+      {% if repostOf %}
+      <input type="hidden" name="repost-of" value="{{ repostOf }}">
+      {% endif %}
+      {% if bookmarkOf %}
+      <input type="hidden" name="bookmark-of" value="{{ bookmarkOf }}">
+      {% endif %}
+
+      {% set isAction = likeOf or repostOf or bookmarkOf %}
+
+      {% if not isAction %}
+      {{ textarea({
+        label: __("microsub.compose.content"),
+        id: "content",
+        name: "content",
+        rows: 5,
+        attributes: { autofocus: true }
+      }) }}
+      <div class="compose__counter">
+        <span id="char-count">0</span> characters
+      </div>
+      {% endif %}
+
+      <div class="button-group">
+        {{ button({
+          text: __("microsub.compose.submit")
+        }) }}
+        <a href="{{ backUrl or (baseUrl + '/channels') }}" class="button button--secondary">
+          {{ __("microsub.compose.cancel") }}
+        </a>
+      </div>
+    </form>
+  </div>
+
+  {% if not isAction %}
+  <script type="module">
+    const textarea = document.getElementById('content');
+    const counter = document.getElementById('char-count');
+    if (textarea && counter) {
+      textarea.addEventListener('input', () => {
+        counter.textContent = textarea.value.length;
+      });
+    }
+  </script>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="reader">
+    {% if channels.length > 0 %}
+    <div class="reader__channels">
+      {% for channel in channels %}
+      <a href="{{ baseUrl }}/channels/{{ channel.uid }}" class="reader__channel{% if channel.uid === currentChannel %} reader__channel--active{% endif %}">
+        <span class="reader__channel-name">
+          {% if channel.uid === "notifications" %}
+          {{ icon("mention") }}
+          {% endif %}
+          {{ channel.name }}
+        </span>
+        {% if channel.unread %}
+        <span class="reader__channel-badge{% if channel.unread === true %} reader__channel-badge--dot{% endif %}">
+          {% if channel.unread !== true %}{{ channel.unread }}{% endif %}
+        </span>
+        {% endif %}
+      </a>
+      {% endfor %}
+    </div>
+    <div class="reader__actions">
+      <a href="{{ baseUrl }}/search" class="button button--primary">
+        {{ icon("syndicate") }} {{ __("microsub.feeds.follow") }}
+      </a>
+      <a href="{{ baseUrl }}/channels/new" class="button button--secondary">
+        {{ icon("createPost") }} {{ __("microsub.channels.new") }}
+      </a>
+    </div>
+    {% else %}
+    <div class="reader__empty">
+      {{ icon("syndicate") }}
+      <p>{{ __("microsub.channels.empty") }}</p>
+      <a href="{{ baseUrl }}/channels/new" class="button button--primary">
+        {{ __("microsub.channels.new") }}
+      </a>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

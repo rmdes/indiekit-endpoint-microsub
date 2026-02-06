@@ -1,0 +1,179 @@
+{#
+  Item card for timeline display
+  Inspired by Aperture/Monocle reader
+#}
+<article class="item-card{% if item._is_read %} item-card--read{% endif %}"
+         data-item-id="{{ item._id }}"
+         data-is-read="{{ item._is_read | default(false) }}">
+
+  {# Context bar for interactions (Aperture pattern) #}
+  {# Helper to extract URL from value that may be string or object #}
+  {% macro getUrl(val) %}{{ val.url or val.value or val if val is string else val }}{% endmacro %}
+
+  {% if item["like-of"] and item["like-of"].length > 0 %}
+  {% set contextUrl = item['like-of'][0].url or item['like-of'][0].value or item['like-of'][0] %}
+  <div class="item-card__context">
+    {{ icon("like") }}
+    <span>Liked</span>
+    <a href="{{ contextUrl }}" target="_blank" rel="noopener">
+      {{ contextUrl | replace("https://", "") | replace("http://", "") | truncate(50) }}
+    </a>
+  </div>
+  {% elif item["repost-of"] and item["repost-of"].length > 0 %}
+  {% set contextUrl = item['repost-of'][0].url or item['repost-of'][0].value or item['repost-of'][0] %}
+  <div class="item-card__context">
+    {{ icon("repost") }}
+    <span>Reposted</span>
+    <a href="{{ contextUrl }}" target="_blank" rel="noopener">
+      {{ contextUrl | replace("https://", "") | replace("http://", "") | truncate(50) }}
+    </a>
+  </div>
+  {% elif item["in-reply-to"] and item["in-reply-to"].length > 0 %}
+  {% set contextUrl = item['in-reply-to'][0].url or item['in-reply-to'][0].value or item['in-reply-to'][0] %}
+  <div class="item-card__context">
+    {{ icon("reply") }}
+    <span>Reply to</span>
+    <a href="{{ contextUrl }}" target="_blank" rel="noopener">
+      {{ contextUrl | replace("https://", "") | replace("http://", "") | truncate(50) }}
+    </a>
+  </div>
+  {% elif item["bookmark-of"] and item["bookmark-of"].length > 0 %}
+  {% set contextUrl = item['bookmark-of'][0].url or item['bookmark-of'][0].value or item['bookmark-of'][0] %}
+  <div class="item-card__context">
+    {{ icon("bookmark") }}
+    <span>Bookmarked</span>
+    <a href="{{ contextUrl }}" target="_blank" rel="noopener">
+      {{ contextUrl | replace("https://", "") | replace("http://", "") | truncate(50) }}
+    </a>
+  </div>
+  {% endif %}
+
+  <a href="{{ baseUrl }}/item/{{ item._id }}" class="item-card__link">
+    {# Author #}
+    {% if item.author %}
+    <div class="item-card__author">
+      {% if item.author.photo %}
+      <img src="{{ item.author.photo }}"
+           alt=""
+           class="item-card__author-photo"
+           width="40"
+           height="40"
+           loading="lazy"
+           onerror="this.style.display='none'">
+      {% endif %}
+      <div class="item-card__author-info">
+        <span class="item-card__author-name">{{ item.author.name or "Unknown" }}</span>
+        {% if item._source %}
+        <span class="item-card__source">{{ item._source.name or item._source.url }}</span>
+        {% elif item.author.url %}
+        <span class="item-card__source">{{ item.author.url | replace("https://", "") | replace("http://", "") }}</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# Title (for articles) #}
+    {% if item.name %}
+    <h3 class="item-card__title">{{ item.name }}</h3>
+    {% endif %}
+
+    {# Content with overflow handling #}
+    {% if item.summary or item.content %}
+    <div class="item-card__content{% if (item.content.text or item.summary or '') | length > 300 %} item-card__content--truncated{% endif %}">
+      {% if item.content.html %}
+      {{ item.content.html | safe | striptags | truncate(400) }}
+      {% elif item.content.text %}
+      {{ item.content.text | truncate(400) }}
+      {% elif item.summary %}
+      {{ item.summary | truncate(400) }}
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {# Categories/Tags #}
+    {% if item.category and item.category.length > 0 %}
+    <div class="item-card__categories">
+      {% for cat in item.category | slice(0, 5) %}
+      <span class="item-card__category">#{{ cat | replace("#", "") }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {# Photo grid (Aperture multi-photo pattern) #}
+    {% if item.photo and item.photo.length > 0 %}
+    {% set photoCount = item.photo.length if item.photo.length <= 4 else 4 %}
+    <div class="item-card__photos item-card__photos--{{ photoCount }}">
+      {% for photo in item.photo | slice(0, 4) %}
+      <img src="{{ photo }}"
+           alt=""
+           class="item-card__photo"
+           loading="lazy"
+           onerror="this.parentElement.removeChild(this)">
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {# Video preview #}
+    {% if item.video and item.video.length > 0 %}
+    <div class="item-card__media">
+      <video src="{{ item.video[0] }}"
+             class="item-card__video"
+             controls
+             preload="metadata"
+             {% if item.photo and item.photo.length > 0 %}poster="{{ item.photo[0] }}"{% endif %}>
+      </video>
+    </div>
+    {% endif %}
+
+    {# Audio preview #}
+    {% if item.audio and item.audio.length > 0 %}
+    <div class="item-card__media">
+      <audio src="{{ item.audio[0] }}" class="item-card__audio" controls preload="metadata"></audio>
+    </div>
+    {% endif %}
+
+    {# Footer with date and actions #}
+    <footer class="item-card__footer">
+      {% if item.published %}
+      <time datetime="{{ item.published }}" class="item-card__date">
+        {{ item.published | date("PP", { locale: locale, timeZone: application.timeZone }) }}
+      </time>
+      {% endif %}
+      {% if not item._is_read %}
+      <span class="item-card__unread" aria-label="Unread">●</span>
+      {% endif %}
+    </footer>
+  </a>
+
+  {# Inline actions (Aperture pattern) #}
+  <div class="item-actions">
+    {% if item.url %}
+    <a href="{{ item.url }}" class="item-actions__button" target="_blank" rel="noopener" title="View original">
+      {{ icon("external") }}
+      <span class="visually-hidden">Original</span>
+    </a>
+    {% endif %}
+    <a href="{{ baseUrl }}/compose?reply={{ item.url | urlencode }}" class="item-actions__button" title="Reply">
+      {{ icon("reply") }}
+      <span class="visually-hidden">Reply</span>
+    </a>
+    <a href="{{ baseUrl }}/compose?like={{ item.url | urlencode }}" class="item-actions__button" title="Like">
+      {{ icon("like") }}
+      <span class="visually-hidden">Like</span>
+    </a>
+    <a href="{{ baseUrl }}/compose?repost={{ item.url | urlencode }}" class="item-actions__button" title="Repost">
+      {{ icon("repost") }}
+      <span class="visually-hidden">Repost</span>
+    </a>
+    {% if not item._is_read %}
+    <button type="button"
+            class="item-actions__button item-actions__mark-read"
+            data-action="mark-read"
+            data-item-id="{{ item._id }}"
+            title="Mark as read">
+      {{ icon("checkboxChecked") }}
+      <span class="visually-hidden">Mark read</span>
+    </button>
+    {% endif %}
+  </div>
+</article>
