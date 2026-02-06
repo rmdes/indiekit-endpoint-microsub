@@ -45,6 +45,8 @@
       "content": "What's on your mind?",
       "comment": "Add a comment (optional)",
       "commentHint": "Your comment will be included when this is syndicated",
+      "syndicateTo": "Syndicate to",
+      "syndicateHint": "Select where to cross-post this",
       "submit": "Post",
       "cancel": "Cancel",
       "replyTo": "Replying to",

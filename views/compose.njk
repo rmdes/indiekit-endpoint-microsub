@@ -72,6 +72,20 @@
         <span id="char-count">0</span> characters
       </div>
 
+      {# Syndication targets #}
+      {% if syndicationTargets and syndicationTargets.length %}
+      <fieldset class="compose__syndication">
+        <legend>{{ __("microsub.compose.syndicateTo") }}</legend>
+        <p class="hint">{{ __("microsub.compose.syndicateHint") }}</p>
+        {% for target in syndicationTargets %}
+        <label class="syndication-target">
+          <input type="checkbox" name="mp-syndicate-to" value="{{ target.uid }}"{% if target.checked %} checked{% endif %}>
+          <span class="syndication-target__name">{{ target.name }}</span>
+        </label>
+        {% endfor %}
+      </fieldset>
+      {% endif %}
+
       <div class="button-group">
         {{ button({
           text: __("microsub.compose.submit")
