@@ -60,18 +60,17 @@
 
       {% set isAction = likeOf or repostOf or bookmarkOf %}
 
-      {% if not isAction %}
       {{ textarea({
-        label: __("microsub.compose.content"),
+        label: __("microsub.compose.content") if not isAction else __("microsub.compose.comment"),
         id: "content",
         name: "content",
-        rows: 5,
-        attributes: { autofocus: true }
+        rows: 5 if not isAction else 3,
+        attributes: { autofocus: true },
+        hint: __("microsub.compose.commentHint") if isAction else false
       }) }}
       <div class="compose__counter">
         <span id="char-count">0</span> characters
       </div>
-      {% endif %}
 
       <div class="button-group">
         {{ button({
@@ -84,7 +83,6 @@
     </form>
   </div>
 
-  {% if not isAction %}
   <script type="module">
     const textarea = document.getElementById('content');
     const counter = document.getElementById('char-count');
@@ -94,5 +92,4 @@
       });
     }
   </script>
-  {% endif %}
 {% endblock %}
