@@ -96,6 +96,7 @@ export default class MicrosubEndpoint {
     readerRouter.get("/search", readerController.searchPage);
     readerRouter.post("/search", readerController.searchFeeds);
     readerRouter.post("/subscribe", readerController.subscribe);
+    readerRouter.post("/api/mark-read", readerController.markAllRead);
     router.use("/reader", readerRouter);
 
     return router;
