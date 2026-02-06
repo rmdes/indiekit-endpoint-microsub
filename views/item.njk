@@ -146,6 +146,61 @@
       <a href="{{ baseUrl }}/compose?bookmark={{ item.url | urlencode }}" class="button button--secondary button--small">
         {{ icon("bookmark") }} {{ __("microsub.item.bookmark") }}
       </a>
+      {% if not item._is_read %}
+      <button type="button"
+              class="button button--secondary button--small item__mark-read"
+              data-item-id="{{ item._id }}"
+              data-channel="{{ channel.uid }}">
+        {{ icon("checkboxChecked") }} {{ __("microsub.timeline.markRead") }}
+      </button>
+      {% endif %}
     </footer>
   </article>
+
+  <script type="module">
+    // Handle mark-read button
+    const markReadBtn = document.querySelector('.item__mark-read');
+    if (markReadBtn) {
+      markReadBtn.addEventListener('click', async () => {
+        const itemId = markReadBtn.dataset.itemId;
+        const channelUid = markReadBtn.dataset.channel;
+        const microsubApiUrl = '{{ baseUrl }}'.replace(/\/reader.*$/, '');
+
+        markReadBtn.disabled = true;
+        markReadBtn.textContent = 'Marking...';
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append('action', 'timeline');
+          formData.append('method', 'mark_read');
+          formData.append('channel', channelUid);
+          formData.append('entry', itemId);
+
+          const response = await fetch(microsubApiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData.toString(),
+            credentials: 'same-origin'
+          });
+
+          if (response.ok) {
+            markReadBtn.textContent = 'Marked as read';
+            markReadBtn.classList.add('button--success');
+            setTimeout(() => {
+              markReadBtn.remove();
+            }, 1500);
+          } else {
+            markReadBtn.textContent = 'Failed';
+            markReadBtn.disabled = false;
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          markReadBtn.textContent = 'Error';
+          markReadBtn.disabled = false;
+        }
+      });
+    }
+  </script>
 {% endblock %}

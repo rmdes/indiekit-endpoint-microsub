@@ -165,6 +165,10 @@
       {{ icon("repost") }}
       <span class="visually-hidden">Repost</span>
     </a>
+    <a href="{{ baseUrl }}/compose?bookmark={{ item.url | urlencode }}" class="item-actions__button" title="Bookmark">
+      {{ icon("bookmark") }}
+      <span class="visually-hidden">Bookmark</span>
+    </a>
     {% if not item._is_read %}
     <button type="button"
             class="item-actions__button item-actions__mark-read"
