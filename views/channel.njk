@@ -119,6 +119,9 @@
 
       // Handle individual mark-read buttons
       const channelUid = timeline.dataset.channel;
+      // Microsub API is at the parent of /reader (e.g., /microsub not /microsub/reader)
+      const microsubApiUrl = '{{ baseUrl }}'.replace(/\/reader$/, '');
+
       timeline.addEventListener('click', async (e) => {
         const button = e.target.closest('.item-actions__mark-read');
         if (!button) return;
@@ -139,7 +142,7 @@
           formData.append('channel', channelUid);
           formData.append('entry', itemId);
 
-          const response = await fetch('{{ baseUrl }}', {
+          const response = await fetch(microsubApiUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
