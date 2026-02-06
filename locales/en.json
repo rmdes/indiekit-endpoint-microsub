@@ -4,6 +4,9 @@
       "title": "Reader",
       "empty": "No items to display",
       "markAllRead": "Mark all as read",
+      "showRead": "Show read ({{count}})",
+      "hideRead": "Hide read items",
+      "allRead": "All caught up!",
       "newer": "Newer",
       "older": "Older"
     },

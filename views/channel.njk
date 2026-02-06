@@ -7,6 +7,7 @@
         {{ icon("previous") }} {{ __("microsub.channels.title") }}
       </a>
       <div class="channel__actions">
+        {% if not showRead and items.length > 0 %}
         <form action="{{ baseUrl }}/api/mark-read" method="POST" style="display: inline;">
           <input type="hidden" name="channel" value="{{ channel.uid }}">
           <input type="hidden" name="entry" value="last-read-entry">
@@ -14,6 +15,16 @@
             {{ icon("checkboxChecked") }} {{ __("microsub.reader.markAllRead") }}
           </button>
         </form>
+        {% endif %}
+        {% if showRead %}
+        <a href="{{ baseUrl }}/channels/{{ channel.uid }}" class="button button--secondary button--small">
+          {{ icon("hide") }} {{ __("microsub.reader.hideRead") }}
+        </a>
+        {% elif readCount > 0 %}
+        <a href="{{ baseUrl }}/channels/{{ channel.uid }}?showRead=true" class="button button--secondary button--small">
+          {{ icon("show") }} {{ __("microsub.reader.showRead", { count: readCount }) }}
+        </a>
+        {% endif %}
         <a href="{{ baseUrl }}/channels/{{ channel.uid }}/feeds" class="button button--secondary button--small">
           {{ icon("syndicate") }} {{ __("microsub.feeds.title") }}
         </a>
@@ -33,14 +44,14 @@
     {% if paging %}
     <nav class="timeline__paging" aria-label="Pagination">
       {% if paging.before %}
-      <a href="?before={{ paging.before }}" class="button button--secondary">
+      <a href="?before={{ paging.before }}{% if showRead %}&showRead=true{% endif %}" class="button button--secondary">
         {{ icon("previous") }} {{ __("microsub.reader.newer") }}
       </a>
       {% else %}
       <span></span>
       {% endif %}
       {% if paging.after %}
-      <a href="?after={{ paging.after }}" class="button button--secondary">
+      <a href="?after={{ paging.after }}{% if showRead %}&showRead=true{% endif %}" class="button button--secondary">
         {{ __("microsub.reader.older") }} {{ icon("next") }}
       </a>
       {% endif %}
@@ -48,11 +59,19 @@
     {% endif %}
     {% else %}
     <div class="reader__empty">
+      {% if readCount > 0 and not showRead %}
+      {{ icon("checkboxChecked") }}
+      <p>{{ __("microsub.reader.allRead") }}</p>
+      <a href="{{ baseUrl }}/channels/{{ channel.uid }}?showRead=true" class="button button--secondary">
+        {{ icon("show") }} {{ __("microsub.reader.showRead", { count: readCount }) }}
+      </a>
+      {% else %}
       {{ icon("syndicate") }}
       <p>{{ __("microsub.timeline.empty") }}</p>
       <a href="{{ baseUrl }}/channels/{{ channel.uid }}/feeds" class="button button--primary">
         {{ __("microsub.feeds.subscribe") }}
       </a>
+      {% endif %}
     </div>
     {% endif %}
   </div>
@@ -95,6 +114,62 @@
               if (link) link.click();
             }
             break;
+        }
+      });
+
+      // Handle individual mark-read buttons
+      const channelUid = timeline.dataset.channel;
+      timeline.addEventListener('click', async (e) => {
+        const button = e.target.closest('.item-actions__mark-read');
+        if (!button) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const itemId = button.dataset.itemId;
+        if (!itemId) return;
+
+        // Disable button while processing
+        button.disabled = true;
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append('action', 'timeline');
+          formData.append('method', 'mark_read');
+          formData.append('channel', channelUid);
+          formData.append('entry', itemId);
+
+          const response = await fetch('{{ baseUrl }}', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData.toString(),
+            credentials: 'same-origin'
+          });
+
+          if (response.ok) {
+            // Hide the item with animation
+            const card = button.closest('.item-card');
+            if (card) {
+              card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+              card.style.opacity = '0';
+              card.style.transform = 'translateX(-20px)';
+              setTimeout(() => {
+                card.remove();
+                // Check if timeline is now empty
+                if (timeline.querySelectorAll('.item-card').length === 0) {
+                  location.reload();
+                }
+              }, 300);
+            }
+          } else {
+            console.error('Failed to mark item as read');
+            button.disabled = false;
+          }
+        } catch (error) {
+          console.error('Error marking item as read:', error);
+          button.disabled = false;
         }
       });
     }
