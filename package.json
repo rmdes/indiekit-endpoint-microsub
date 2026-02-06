@@ -1,0 +1,50 @@
+{
+  "name": "@rmdes/indiekit-endpoint-microsub",
+  "version": "1.0.11",
+  "description": "Microsub endpoint for Indiekit. Enables subscribing to feeds and reading content using the Microsub protocol.",
+  "keywords": [
+    "indiekit",
+    "indiekit-plugin",
+    "indieweb",
+    "microsub",
+    "reader",
+    "social-reader"
+  ],
+  "homepage": "https://github.com/rmdes/indiekit-endpoint-microsub",
+  "author": {
+    "name": "Ricardo Mendes",
+    "url": "https://rmendes.net"
+  },
+  "contributors": [
+    {
+      "name": "Paul Robert Lloyd",
+      "url": "https://paulrobertlloyd.com"
+    }
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module",
+  "main": "index.js",
+  "files": [
+    "lib",
+    "locales",
+    "index.js"
+  ],
+  "bugs": {
+    "url": "https://github.com/rmdes/indiekit-endpoint-microsub/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rmdes/indiekit-endpoint-microsub.git"
+  },
+  "dependencies": {
+    "@indiekit/error": "^1.0.0-beta.25",
+    "express": "^5.0.0",
+    "mongodb": "^6.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
