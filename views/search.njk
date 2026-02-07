@@ -25,16 +25,40 @@
       </div>
     </form>
 
+    {% if validationError %}
+    <div class="notice notice--error">
+      <p>{{ validationError }}</p>
+    </div>
+    {% endif %}
+
+    {% if discoveryError %}
+    <div class="notice notice--error">
+      <p>{{ discoveryError }}</p>
+    </div>
+    {% endif %}
+
     {% if results and results.length > 0 %}
     <div class="search__results">
       <h3>{{ __("microsub.search.title") }}</h3>
       <div class="search__list">
         {% for result in results %}
-        <div class="search__item">
+        <div class="search__item{% if not result.valid %} search__item--invalid{% endif %}{% if result.isCommentsFeed %} search__item--comments{% endif %}">
           <div class="search__feed">
-            <span class="search__name">{{ result.title or "Feed" }}</span>
+            <span class="search__name">
+              {{ result.title or "Feed" }}
+              <span class="search__type badge badge--{% if result.valid %}info{% else %}warning{% endif %}">
+                {{ result.typeLabel }}
+              </span>
+              {% if result.isCommentsFeed %}
+              <span class="search__type badge badge--warning">Comments</span>
+              {% endif %}
+            </span>
             <span class="search__url">{{ result.url | replace("https://", "") | replace("http://", "") }}</span>
+            {% if not result.valid %}
+            <span class="search__error">{{ result.error }}</span>
+            {% endif %}
           </div>
+          {% if result.valid %}
           <form method="post" action="{{ baseUrl }}/subscribe" class="search__subscribe">
             <input type="hidden" name="url" value="{{ result.url }}">
             <label for="channel-{{ loop.index }}" class="visually-hidden">{{ __("microsub.channels.title") }}</label>
@@ -48,6 +72,9 @@
               classes: "button--small"
             }) }}
           </form>
+          {% else %}
+          <span class="search__invalid-badge">Invalid</span>
+          {% endif %}
         </div>
         {% endfor %}
       </div>

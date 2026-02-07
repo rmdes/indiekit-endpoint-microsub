@@ -3,6 +3,7 @@ import path from "node:path";
 import express from "express";
 
 import { microsubController } from "./lib/controllers/microsub.js";
+import { opmlController } from "./lib/controllers/opml.js";
 import { readerController } from "./lib/controllers/reader.js";
 import { handleMediaProxy } from "./lib/media/proxy.js";
 import { startScheduler, stopScheduler } from "./lib/polling/scheduler.js";
@@ -97,6 +98,7 @@ export default class MicrosubEndpoint {
     readerRouter.post("/search", readerController.searchFeeds);
     readerRouter.post("/subscribe", readerController.subscribe);
     readerRouter.post("/api/mark-read", readerController.markAllRead);
+    readerRouter.get("/opml", opmlController.exportOpml);
     router.use("/reader", readerRouter);
 
     return router;
