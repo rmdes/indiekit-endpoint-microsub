@@ -43,7 +43,7 @@
             <span class="feeds__error-count">{{ feed.consecutiveErrors }} consecutive errors</span>
             {% endif %}
             {% if feed.lastSuccessAt %}
-            <span class="feeds__meta">Last success: {{ feed.lastSuccessAt | date("relative") }}</span>
+            <span class="feeds__meta">Last success: {{ feed.lastSuccessAt }}</span>
             {% endif %}
           </div>
         </div>
@@ -51,16 +51,16 @@
           <a href="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/edit"
              class="button button--secondary button--small"
              title="Edit feed URL">
-            {{ icon("edit") }}
+            {{ icon("updatePost") }}
           </a>
           <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/rediscover" style="display:inline;">
             <button type="submit" class="button button--secondary button--small" title="Rediscover feed">
-              {{ icon("discover") }}
+              {{ icon("syndicate") }}
             </button>
           </form>
           <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/refresh" style="display:inline;">
             <button type="submit" class="button button--secondary button--small" title="Refresh now">
-              {{ icon("refresh") }}
+              {{ icon("repost") }}
             </button>
           </form>
           <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/remove" style="display:inline;">
