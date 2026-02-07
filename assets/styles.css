@@ -765,36 +765,13 @@
 }
 
 /* ==========================================================================
-   Badges (for feed types, validation status)
+   Badge extensions for search results
    ========================================================================== */
 
-.badge {
-  border-radius: var(--border-radius);
-  display: inline-block;
+/* Extend Indiekit badges with small variant for inline use */
+.badge--small {
   font-size: var(--font-size-small);
-  font-weight: 500;
   padding: 2px var(--space-xs);
-  vertical-align: middle;
-}
-
-.badge--info {
-  background: var(--color-primary);
-  color: var(--color-background);
-}
-
-.badge--warning {
-  background: var(--color-warning, #ffcc00);
-  color: #000;
-}
-
-.badge--error {
-  background: var(--color-error, #ff4444);
-  color: #fff;
-}
-
-.badge--success {
-  background: var(--color-success, #22c55e);
-  color: #fff;
 }
 
 /* ==========================================================================
@@ -826,14 +803,6 @@
   border-left: 3px solid var(--color-warning, #ffcc00);
 }
 
-.search__invalid-badge {
-  background: var(--color-error, #ff4444);
-  border-radius: var(--border-radius);
-  color: #fff;
-  font-size: var(--font-size-small);
-  font-weight: 500;
-  padding: var(--space-xs) var(--space-s);
-}
 
 .search__subscribe {
   align-items: center;
@@ -842,29 +811,128 @@
 }
 
 /* ==========================================================================
-   Notices (errors, warnings)
+   Notices (inline errors, warnings)
    ========================================================================== */
 
 .notice {
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-small, var(--border-radius));
   margin-bottom: var(--space-m);
   padding: var(--space-m);
 }
 
 .notice--error {
-  background: rgba(var(--color-error-rgb, 255, 68, 68), 0.1);
-  border: 1px solid var(--color-error, #ff4444);
-  color: var(--color-error, #ff4444);
+  background: var(--color-red90, #fef2f2);
+  border: 1px solid var(--color-error, var(--color-red45));
+  color: var(--color-red10, #7f1d1d);
 }
 
 .notice--warning {
-  background: rgba(255, 204, 0, 0.1);
-  border: 1px solid var(--color-warning, #ffcc00);
-  color: #856404;
+  background: var(--color-yellow90, #fefce8);
+  border: 1px solid var(--color-yellow50, #eab308);
+  color: var(--color-yellow10, #713f12);
 }
 
 .notice--success {
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid var(--color-success, #22c55e);
-  color: var(--color-success, #22c55e);
+  background: var(--color-green90, #f0fdf4);
+  border: 1px solid var(--color-success, var(--color-green50));
+  color: var(--color-green10, #14532d);
+}
+
+/* ==========================================================================
+   Feed Management Enhancements
+   ========================================================================== */
+
+.feeds__item--error {
+  border-left: 3px solid var(--color-error, #ff4444);
+}
+
+.feeds__error {
+  color: var(--color-error, #ff4444);
+  display: block;
+  font-size: var(--font-size-small);
+  margin-top: var(--space-xs);
+}
+
+.feeds__error-count {
+  color: var(--color-warning, #ffcc00);
+  display: block;
+  font-size: var(--font-size-small);
+}
+
+.feeds__meta {
+  color: var(--color-text-muted);
+  display: block;
+  font-size: var(--font-size-small);
+}
+
+.feeds__details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.feeds__actions {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-xs);
+}
+
+.feeds__actions form {
+  display: inline;
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   Feed Edit Page
+   ========================================================================== */
+
+.feed-edit {
+  max-width: 40rem;
+}
+
+.feed-edit__current {
+  background: var(--color-offset);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--space-l);
+  padding: var(--space-m);
+}
+
+.feed-edit__url {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.feed-edit__title {
+  font-weight: 600;
+}
+
+.feed-edit__form {
+  margin-bottom: var(--space-l);
+}
+
+.feed-edit__help {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  margin-bottom: var(--space-m);
+}
+
+.feed-edit__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+.feed-edit__action {
+  background: var(--color-offset);
+  border-radius: var(--border-radius);
+  padding: var(--space-m);
+}
+
+.feed-edit__action p {
+  margin-bottom: var(--space-s);
 }

@@ -34,7 +34,15 @@
       "unfollow": "Unfollow",
       "empty": "No feeds followed in this channel",
       "url": "Feed URL",
-      "urlPlaceholder": "https://example.com/feed.xml"
+      "urlPlaceholder": "https://example.com/feed.xml",
+      "edit": "Edit feed",
+      "rediscover": "Rediscover feed",
+      "refresh": "Refresh now",
+      "status": {
+        "active": "Active",
+        "error": "Error",
+        "stale": "Stale"
+      }
     },
     "item": {
       "reply": "Reply",

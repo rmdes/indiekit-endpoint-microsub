@@ -91,6 +91,26 @@ export default class MicrosubEndpoint {
       "/channels/:uid/feeds/remove",
       readerController.removeFeed,
     );
+    readerRouter.get(
+      "/channels/:uid/feeds/:feedId",
+      readerController.feedDetails,
+    );
+    readerRouter.get(
+      "/channels/:uid/feeds/:feedId/edit",
+      readerController.editFeedForm,
+    );
+    readerRouter.post(
+      "/channels/:uid/feeds/:feedId/edit",
+      readerController.updateFeedUrl,
+    );
+    readerRouter.post(
+      "/channels/:uid/feeds/:feedId/rediscover",
+      readerController.rediscoverFeed,
+    );
+    readerRouter.post(
+      "/channels/:uid/feeds/:feedId/refresh",
+      readerController.refreshFeed,
+    );
     readerRouter.get("/item/:id", readerController.item);
     readerRouter.get("/compose", readerController.compose);
     readerRouter.post("/compose", readerController.submitCompose);

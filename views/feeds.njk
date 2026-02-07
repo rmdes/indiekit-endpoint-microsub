@@ -13,7 +13,7 @@
     {% if feeds.length > 0 %}
     <div class="feeds__list">
       {% for feed in feeds %}
-      <div class="feeds__item">
+      <div class="feeds__item{% if feed.status == 'error' %} feeds__item--error{% endif %}">
         <div class="feeds__info">
           {% if feed.photo %}
           <img src="{{ feed.photo }}"
@@ -25,19 +25,51 @@
                onerror="this.style.display='none'">
           {% endif %}
           <div class="feeds__details">
-            <span class="feeds__name">{{ feed.title or feed.url }}</span>
+            <span class="feeds__name">
+              {{ feed.title or feed.url }}
+              {% if feed.status == 'error' %}
+              <span class="badge badge--red">Error</span>
+              {% elif feed.status == 'active' %}
+              <span class="badge badge--green">Active</span>
+              {% endif %}
+            </span>
             <a href="{{ feed.url }}" class="feeds__url" target="_blank" rel="noopener">
               {{ feed.url | replace("https://", "") | replace("http://", "") }}
             </a>
+            {% if feed.lastError %}
+            <span class="feeds__error">{{ feed.lastError }}</span>
+            {% endif %}
+            {% if feed.consecutiveErrors > 0 %}
+            <span class="feeds__error-count">{{ feed.consecutiveErrors }} consecutive errors</span>
+            {% endif %}
+            {% if feed.lastSuccessAt %}
+            <span class="feeds__meta">Last success: {{ feed.lastSuccessAt | date("relative") }}</span>
+            {% endif %}
           </div>
         </div>
-        <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/remove" class="feeds__actions">
-          <input type="hidden" name="url" value="{{ feed.url }}">
-          {{ button({
-            text: __("microsub.feeds.unfollow"),
-            classes: "button--secondary button--small"
-          }) }}
-        </form>
+        <div class="feeds__actions">
+          <a href="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/edit"
+             class="button button--secondary button--small"
+             title="Edit feed URL">
+            {{ icon("edit") }}
+          </a>
+          <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/rediscover" style="display:inline;">
+            <button type="submit" class="button button--secondary button--small" title="Rediscover feed">
+              {{ icon("discover") }}
+            </button>
+          </form>
+          <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/refresh" style="display:inline;">
+            <button type="submit" class="button button--secondary button--small" title="Refresh now">
+              {{ icon("refresh") }}
+            </button>
+          </form>
+          <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/remove" style="display:inline;">
+            <input type="hidden" name="url" value="{{ feed.url }}">
+            <button type="submit" class="button button--warning button--small" title="Unfollow">
+              {{ icon("delete") }}
+            </button>
+          </form>
+        </div>
       </div>
       {% endfor %}
     </div>

@@ -46,11 +46,11 @@
           <div class="search__feed">
             <span class="search__name">
               {{ result.title or "Feed" }}
-              <span class="search__type badge badge--{% if result.valid %}info{% else %}warning{% endif %}">
+              <span class="search__type badge badge--small{% if result.valid %} badge--green{% else %} badge--yellow{% endif %}">
                 {{ result.typeLabel }}
               </span>
               {% if result.isCommentsFeed %}
-              <span class="search__type badge badge--warning">Comments</span>
+              <span class="search__type badge badge--small badge--yellow">Comments</span>
               {% endif %}
             </span>
             <span class="search__url">{{ result.url | replace("https://", "") | replace("http://", "") }}</span>
@@ -73,7 +73,7 @@
             }) }}
           </form>
           {% else %}
-          <span class="search__invalid-badge">Invalid</span>
+          <span class="badge badge--small badge--red">Invalid</span>
           {% endif %}
         </div>
         {% endfor %}

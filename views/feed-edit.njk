@@ -1,0 +1,84 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="settings">
+    <a href="{{ baseUrl }}/channels/{{ channel.uid }}/feeds" class="back-link">
+      {{ icon("previous") }} {{ __("microsub.feeds.title") }}
+    </a>
+
+    <h2>{{ __("microsub.feeds.edit") }}</h2>
+
+    {% if error %}
+    <div class="notice notice--error">
+      <p>{{ error }}</p>
+    </div>
+    {% endif %}
+
+    <div class="feed-edit">
+      <div class="feed-edit__current">
+        <h3>Current Feed</h3>
+        <p class="feed-edit__url">{{ feed.url }}</p>
+        {% if feed.title %}
+        <p class="feed-edit__title">{{ feed.title }}</p>
+        {% endif %}
+        {% if feed.status == 'error' %}
+        <div class="notice notice--error">
+          <p><strong>Status:</strong> Error</p>
+          {% if feed.lastError %}
+          <p><strong>Last error:</strong> {{ feed.lastError }}</p>
+          {% endif %}
+          {% if feed.consecutiveErrors %}
+          <p><strong>Consecutive errors:</strong> {{ feed.consecutiveErrors }}</p>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/edit" class="feed-edit__form">
+        {{ input({
+          id: "url",
+          name: "url",
+          label: "New Feed URL",
+          type: "url",
+          required: true,
+          value: feed.url,
+          placeholder: "https://example.com/feed.xml",
+          autocomplete: "off"
+        }) }}
+
+        <p class="feed-edit__help">
+          Enter the direct URL to the RSS, Atom, or JSON Feed. The URL will be validated before updating.
+        </p>
+
+        <div class="button-group">
+          {{ button({ text: "Update Feed URL" }) }}
+          <a href="{{ baseUrl }}/channels/{{ channel.uid }}/feeds" class="button button--secondary">
+            Cancel
+          </a>
+        </div>
+      </form>
+
+      <div class="divider"></div>
+
+      <div class="feed-edit__actions">
+        <h3>Other Actions</h3>
+
+        <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/rediscover" class="feed-edit__action">
+          <p>Run feed discovery on the current URL to find the actual RSS/Atom feed.</p>
+          {{ button({
+            text: "Rediscover Feed",
+            classes: "button--secondary"
+          }) }}
+        </form>
+
+        <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/refresh" class="feed-edit__action">
+          <p>Force refresh this feed now.</p>
+          {{ button({
+            text: "Refresh Now",
+            classes: "button--secondary"
+          }) }}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
