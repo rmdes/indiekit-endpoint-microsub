@@ -1,4 +1,5 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import express from "express";
 
@@ -27,6 +28,14 @@ export default class MicrosubEndpoint {
   constructor(options = {}) {
     this.options = { ...defaults, ...options };
     this.mountPath = this.options.mountPath;
+  }
+
+  /**
+   * Locales directory path
+   * @returns {string} Path to locales directory
+   */
+  get localesDirectory() {
+    return path.join(path.dirname(fileURLToPath(import.meta.url)), "locales");
   }
 
   /**

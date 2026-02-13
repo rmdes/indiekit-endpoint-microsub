@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "Leitor",
+      "empty": "Nenhum item para exibir",
+      "markAllRead": "Marcar tudo como lido",
+      "showRead": "Mostrar lidos ({{count}})",
+      "hideRead": "Ocultar itens lidos",
+      "allRead": "Tudo em dia!",
+      "newer": "Mais recente",
+      "older": "Mais antigo"
+    },
+    "channels": {
+      "title": "Canais",
+      "name": "Nome do canal",
+      "new": "Novo canal",
+      "create": "Criar canal",
+      "delete": "Excluir canal",
+      "settings": "Configurações do canal",
+      "empty": "Ainda não há canais. Crie um para começar.",
+      "notifications": "Notificações"
+    },
+    "timeline": {
+      "title": "Linha do tempo",
+      "empty": "Nenhum item neste canal",
+      "markRead": "Marcar como lido",
+      "markUnread": "Marcar como não lido",
+      "remove": "Remover"
+    },
+    "feeds": {
+      "title": "Feeds",
+      "follow": "Seguir",
+      "subscribe": "Assinar um feed",
+      "unfollow": "Deixar de seguir",
+      "empty": "Nenhum feed seguido neste canal",
+      "url": "URL do feed",
+      "urlPlaceholder": "https://exemplo.com/feed.xml",
+      "edit": "Editar feed",
+      "rediscover": "Redescobrir feed",
+      "refresh": "Atualizar agora",
+      "status": {
+        "active": "Ativo",
+        "error": "Erro",
+        "stale": "Desatualizado"
+      }
+    },
+    "item": {
+      "reply": "Responder",
+      "like": "Curtir",
+      "repost": "Compartilhar novamente",
+      "bookmark": "Favoritar",
+      "viewOriginal": "Ver original"
+    },
+    "compose": {
+      "title": "Escrever",
+      "content": "O que você está pensando?",
+      "comment": "Adicionar um comentário (opcional)",
+      "commentHint": "Seu comentário será incluído quando isto for sindicado",
+      "syndicateTo": "Sindicar para",
+      "syndicateHint": "Selecione onde publicar isto",
+      "submit": "Publicar",
+      "cancel": "Cancelar",
+      "replyTo": "Respondendo a",
+      "likeOf": "Curtindo",
+      "repostOf": "Compartilhando novamente",
+      "bookmarkOf": "Favoritando"
+    },
+    "settings": {
+      "title": "Configurações de {{channel}}",
+      "excludeTypes": "Excluir tipos de interação",
+      "excludeTypesHelp": "Selecione os tipos de posts a ocultar deste canal",
+      "excludeRegex": "Padrão de exclusão",
+      "excludeRegexHelp": "Expressão regular para filtrar conteúdo correspondente",
+      "save": "Salvar configurações",
+      "dangerZone": "Zona de perigo",
+      "deleteWarning": "Excluir este canal removerá permanentemente todos os feeds e itens. Esta ação não pode ser desfeita.",
+      "deleteConfirm": "Você tem certeza de que deseja excluir este canal e todo o seu conteúdo?",
+      "delete": "Excluir canal",
+      "types": {
+        "like": "Curtidas",
+        "repost": "Compartilhamentos",
+        "bookmark": "Favoritos",
+        "reply": "Respostas",
+        "checkin": "Check-ins"
+      }
+    },
+    "search": {
+      "title": "Pesquisar",
+      "placeholder": "Digite URL ou termo de pesquisa",
+      "submit": "Pesquisar",
+      "noResults": "Nenhum resultado encontrado"
+    },
+    "preview": {
+      "title": "Visualização",
+      "subscribe": "Assinar este feed"
+    },
+    "error": {
+      "channelNotFound": "Canal não encontrado",
+      "feedNotFound": "Feed não encontrado",
+      "invalidUrl": "URL inválida",
+      "invalidAction": "Ação inválida"
+    }
+  }
+}

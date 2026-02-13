@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "阅读器",
+      "empty": "没有可显示的项目",
+      "markAllRead": "全部标记为已读",
+      "showRead": "显示已读 ({{count}})",
+      "hideRead": "隐藏已读项目",
+      "allRead": "全部已读！",
+      "newer": "较新",
+      "older": "较旧"
+    },
+    "channels": {
+      "title": "频道",
+      "name": "频道名称",
+      "new": "新频道",
+      "create": "创建频道",
+      "delete": "删除频道",
+      "settings": "频道设置",
+      "empty": "还没有频道。创建一个开始吧。",
+      "notifications": "通知"
+    },
+    "timeline": {
+      "title": "时间线",
+      "empty": "此频道中没有项目",
+      "markRead": "标记为已读",
+      "markUnread": "标记为未读",
+      "remove": "删除"
+    },
+    "feeds": {
+      "title": "订阅源",
+      "follow": "关注",
+      "subscribe": "订阅订阅源",
+      "unfollow": "取消关注",
+      "empty": "此频道中没有关注的订阅源",
+      "url": "订阅源 URL",
+      "urlPlaceholder": "https://example.com/feed.xml",
+      "edit": "编辑订阅源",
+      "rediscover": "重新发现订阅源",
+      "refresh": "立即刷新",
+      "status": {
+        "active": "活跃",
+        "error": "错误",
+        "stale": "过期"
+      }
+    },
+    "item": {
+      "reply": "回复",
+      "like": "点赞",
+      "repost": "转发",
+      "bookmark": "书签",
+      "viewOriginal": "查看原文"
+    },
+    "compose": {
+      "title": "撰写",
+      "content": "在想什么？",
+      "comment": "添加评论（可选）",
+      "commentHint": "当此内容被聚合时，您的评论将被包含在内",
+      "syndicateTo": "聚合到",
+      "syndicateHint": "选择要交叉发布到哪里",
+      "submit": "发布",
+      "cancel": "取消",
+      "replyTo": "回复",
+      "likeOf": "点赞",
+      "repostOf": "转发",
+      "bookmarkOf": "添加书签"
+    },
+    "settings": {
+      "title": "{{channel}} 设置",
+      "excludeTypes": "排除互动类型",
+      "excludeTypesHelp": "选择要从此频道隐藏的帖子类型",
+      "excludeRegex": "排除模式",
+      "excludeRegexHelp": "用于过滤匹配内容的正则表达式",
+      "save": "保存设置",
+      "dangerZone": "危险区域",
+      "deleteWarning": "删除此频道将永久删除所有订阅源和项目。此操作无法撤销。",
+      "deleteConfirm": "您确定要删除此频道及其所有内容吗？",
+      "delete": "删除频道",
+      "types": {
+        "like": "点赞",
+        "repost": "转发",
+        "bookmark": "书签",
+        "reply": "回复",
+        "checkin": "签到"
+      }
+    },
+    "search": {
+      "title": "搜索",
+      "placeholder": "输入 URL 或搜索词",
+      "submit": "搜索",
+      "noResults": "未找到结果"
+    },
+    "preview": {
+      "title": "预览",
+      "subscribe": "订阅此订阅源"
+    },
+    "error": {
+      "channelNotFound": "未找到频道",
+      "feedNotFound": "未找到订阅源",
+      "invalidUrl": "无效的 URL",
+      "invalidAction": "无效的操作"
+    }
+  }
+}

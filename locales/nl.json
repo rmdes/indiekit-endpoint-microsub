@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "Lezer",
+      "empty": "Geen items om weer te geven",
+      "markAllRead": "Alles als gelezen markeren",
+      "showRead": "Toon gelezen ({{count}})",
+      "hideRead": "Verberg gelezen items",
+      "allRead": "Alles bijgewerkt!",
+      "newer": "Nieuwer",
+      "older": "Ouder"
+    },
+    "channels": {
+      "title": "Kanalen",
+      "name": "Kanaalnaam",
+      "new": "Nieuw kanaal",
+      "create": "Kanaal aanmaken",
+      "delete": "Kanaal verwijderen",
+      "settings": "Kanaalinstellingen",
+      "empty": "Nog geen kanalen. Maak er een om te beginnen.",
+      "notifications": "Meldingen"
+    },
+    "timeline": {
+      "title": "Tijdlijn",
+      "empty": "Geen items in dit kanaal",
+      "markRead": "Als gelezen markeren",
+      "markUnread": "Als ongelezen markeren",
+      "remove": "Verwijderen"
+    },
+    "feeds": {
+      "title": "Feeds",
+      "follow": "Volgen",
+      "subscribe": "Abonneren op een feed",
+      "unfollow": "Ontvolgen",
+      "empty": "Geen feeds gevolgd in dit kanaal",
+      "url": "Feed-URL",
+      "urlPlaceholder": "https://voorbeeld.nl/feed.xml",
+      "edit": "Feed bewerken",
+      "rediscover": "Feed opnieuw ontdekken",
+      "refresh": "Nu vernieuwen",
+      "status": {
+        "active": "Actief",
+        "error": "Fout",
+        "stale": "Verouderd"
+      }
+    },
+    "item": {
+      "reply": "Reageren",
+      "like": "Vind ik leuk",
+      "repost": "Opnieuw plaatsen",
+      "bookmark": "Bladwijzer",
+      "viewOriginal": "Origineel bekijken"
+    },
+    "compose": {
+      "title": "Opstellen",
+      "content": "Wat houdt je bezig?",
+      "comment": "Voeg een opmerking toe (optioneel)",
+      "commentHint": "Je opmerking wordt meegenomen wanneer dit wordt gesyndikeerd",
+      "syndicateTo": "Syndiceren naar",
+      "syndicateHint": "Selecteer waar dit moet worden geplaatst",
+      "submit": "Plaatsen",
+      "cancel": "Annuleren",
+      "replyTo": "Reageren op",
+      "likeOf": "Vind ik leuk",
+      "repostOf": "Opnieuw plaatsen",
+      "bookmarkOf": "Bladwijzer maken"
+    },
+    "settings": {
+      "title": "{{channel}}-instellingen",
+      "excludeTypes": "Interactietypes uitsluiten",
+      "excludeTypesHelp": "Selecteer berichttypen om te verbergen uit dit kanaal",
+      "excludeRegex": "Uitsluitingspatroon",
+      "excludeRegexHelp": "Reguliere expressie om overeenkomende inhoud te filteren",
+      "save": "Instellingen opslaan",
+      "dangerZone": "Gevarenzone",
+      "deleteWarning": "Het verwijderen van dit kanaal verwijdert permanent alle feeds en items. Deze actie kan niet ongedaan worden gemaakt.",
+      "deleteConfirm": "Weet je zeker dat je dit kanaal en al zijn inhoud wilt verwijderen?",
+      "delete": "Kanaal verwijderen",
+      "types": {
+        "like": "Vind ik leuks",
+        "repost": "Opnieuw geplaatste berichten",
+        "bookmark": "Bladwijzers",
+        "reply": "Reacties",
+        "checkin": "Check-ins"
+      }
+    },
+    "search": {
+      "title": "Zoeken",
+      "placeholder": "Voer URL of zoekterm in",
+      "submit": "Zoeken",
+      "noResults": "Geen resultaten gevonden"
+    },
+    "preview": {
+      "title": "Voorbeeld",
+      "subscribe": "Abonneren op deze feed"
+    },
+    "error": {
+      "channelNotFound": "Kanaal niet gevonden",
+      "feedNotFound": "Feed niet gevonden",
+      "invalidUrl": "Ongeldige URL",
+      "invalidAction": "Ongeldige actie"
+    }
+  }
+}

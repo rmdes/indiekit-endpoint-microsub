@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "Lector",
+      "empty": "No hay elementos para mostrar",
+      "markAllRead": "Marcar todo como leído",
+      "showRead": "Mostrar leídos ({{count}})",
+      "hideRead": "Ocultar elementos leídos",
+      "allRead": "¡Todo al día!",
+      "newer": "Más reciente",
+      "older": "Más antiguo"
+    },
+    "channels": {
+      "title": "Canales",
+      "name": "Nombre del canal",
+      "new": "Nuevo canal",
+      "create": "Crear canal",
+      "delete": "Eliminar canal",
+      "settings": "Configuración del canal",
+      "empty": "Aún no hay canales. Crea uno para empezar.",
+      "notifications": "Notificaciones"
+    },
+    "timeline": {
+      "title": "Cronología",
+      "empty": "No hay elementos en este canal",
+      "markRead": "Marcar como leído",
+      "markUnread": "Marcar como no leído",
+      "remove": "Eliminar"
+    },
+    "feeds": {
+      "title": "Fuentes",
+      "follow": "Seguir",
+      "subscribe": "Suscribirse a una fuente",
+      "unfollow": "Dejar de seguir",
+      "empty": "No se sigue ninguna fuente en este canal",
+      "url": "URL de la fuente",
+      "urlPlaceholder": "https://ejemplo.com/feed.xml",
+      "edit": "Editar fuente",
+      "rediscover": "Redescubrir fuente",
+      "refresh": "Actualizar ahora",
+      "status": {
+        "active": "Activa",
+        "error": "Error",
+        "stale": "Obsoleta"
+      }
+    },
+    "item": {
+      "reply": "Responder",
+      "like": "Me gusta",
+      "repost": "Republicar",
+      "bookmark": "Marcador",
+      "viewOriginal": "Ver original"
+    },
+    "compose": {
+      "title": "Redactar",
+      "content": "¿Qué estás pensando?",
+      "comment": "Añadir un comentario (opcional)",
+      "commentHint": "Tu comentario se incluirá cuando esto se sindique",
+      "syndicateTo": "Sindicar a",
+      "syndicateHint": "Selecciona dónde publicar esto",
+      "submit": "Publicar",
+      "cancel": "Cancelar",
+      "replyTo": "Respondiendo a",
+      "likeOf": "Me gusta",
+      "repostOf": "Republicando",
+      "bookmarkOf": "Marcando"
+    },
+    "settings": {
+      "title": "Configuración de {{channel}}",
+      "excludeTypes": "Excluir tipos de interacción",
+      "excludeTypesHelp": "Selecciona los tipos de publicaciones que deseas ocultar de este canal",
+      "excludeRegex": "Patrón de exclusión",
+      "excludeRegexHelp": "Expresión regular para filtrar contenido coincidente",
+      "save": "Guardar configuración",
+      "dangerZone": "Zona de peligro",
+      "deleteWarning": "Eliminar este canal eliminará permanentemente todas las fuentes y elementos. Esta acción no se puede deshacer.",
+      "deleteConfirm": "¿Estás seguro de que deseas eliminar este canal y todo su contenido?",
+      "delete": "Eliminar canal",
+      "types": {
+        "like": "Me gusta",
+        "repost": "Republicaciones",
+        "bookmark": "Marcadores",
+        "reply": "Respuestas",
+        "checkin": "Registros"
+      }
+    },
+    "search": {
+      "title": "Buscar",
+      "placeholder": "Introduce URL o término de búsqueda",
+      "submit": "Buscar",
+      "noResults": "No se encontraron resultados"
+    },
+    "preview": {
+      "title": "Vista previa",
+      "subscribe": "Suscribirse a esta fuente"
+    },
+    "error": {
+      "channelNotFound": "Canal no encontrado",
+      "feedNotFound": "Fuente no encontrada",
+      "invalidUrl": "URL no válida",
+      "invalidAction": "Acción no válida"
+    }
+  }
+}

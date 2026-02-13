@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "Czytnik",
+      "empty": "Brak elementów do wyświetlenia",
+      "markAllRead": "Oznacz wszystkie jako przeczytane",
+      "showRead": "Pokaż przeczytane ({{count}})",
+      "hideRead": "Ukryj przeczytane elementy",
+      "allRead": "Wszystko przeczytane!",
+      "newer": "Nowsze",
+      "older": "Starsze"
+    },
+    "channels": {
+      "title": "Kanały",
+      "name": "Nazwa kanału",
+      "new": "Nowy kanał",
+      "create": "Utwórz kanał",
+      "delete": "Usuń kanał",
+      "settings": "Ustawienia kanału",
+      "empty": "Nie ma jeszcze kanałów. Utwórz jeden, aby rozpocząć.",
+      "notifications": "Powiadomienia"
+    },
+    "timeline": {
+      "title": "Oś czasu",
+      "empty": "Brak elementów w tym kanale",
+      "markRead": "Oznacz jako przeczytane",
+      "markUnread": "Oznacz jako nieprzeczytane",
+      "remove": "Usuń"
+    },
+    "feeds": {
+      "title": "Kanały RSS",
+      "follow": "Obserwuj",
+      "subscribe": "Subskrybuj kanał",
+      "unfollow": "Przestań obserwować",
+      "empty": "Brak obserwowanych kanałów w tym kanale",
+      "url": "URL kanału",
+      "urlPlaceholder": "https://przyklad.pl/feed.xml",
+      "edit": "Edytuj kanał",
+      "rediscover": "Odkryj kanał ponownie",
+      "refresh": "Odśwież teraz",
+      "status": {
+        "active": "Aktywny",
+        "error": "Błąd",
+        "stale": "Nieaktualny"
+      }
+    },
+    "item": {
+      "reply": "Odpowiedz",
+      "like": "Polub",
+      "repost": "Udostępnij",
+      "bookmark": "Dodaj do zakładek",
+      "viewOriginal": "Zobacz oryginał"
+    },
+    "compose": {
+      "title": "Napisz",
+      "content": "Co Cię nurtuje?",
+      "comment": "Dodaj komentarz (opcjonalnie)",
+      "commentHint": "Twój komentarz zostanie uwzględniony podczas syndykacji",
+      "syndicateTo": "Syndykuj do",
+      "syndicateHint": "Wybierz, gdzie opublikować ten post",
+      "submit": "Opublikuj",
+      "cancel": "Anuluj",
+      "replyTo": "Odpowiadasz na",
+      "likeOf": "Lubisz",
+      "repostOf": "Udostępniasz",
+      "bookmarkOf": "Dodajesz do zakładek"
+    },
+    "settings": {
+      "title": "Ustawienia {{channel}}",
+      "excludeTypes": "Wyklucz typy interakcji",
+      "excludeTypesHelp": "Wybierz typy postów do ukrycia w tym kanale",
+      "excludeRegex": "Wzorzec wykluczania",
+      "excludeRegexHelp": "Wyrażenie regularne do filtrowania pasującej treści",
+      "save": "Zapisz ustawienia",
+      "dangerZone": "Strefa niebezpieczna",
+      "deleteWarning": "Usunięcie tego kanału trwale usunie wszystkie kanały RSS i elementy. Tej czynności nie można cofnąć.",
+      "deleteConfirm": "Czy na pewno chcesz usunąć ten kanał i całą jego zawartość?",
+      "delete": "Usuń kanał",
+      "types": {
+        "like": "Polubienia",
+        "repost": "Udostępnienia",
+        "bookmark": "Zakładki",
+        "reply": "Odpowiedzi",
+        "checkin": "Zameldowania"
+      }
+    },
+    "search": {
+      "title": "Szukaj",
+      "placeholder": "Wprowadź URL lub wyszukiwaną frazę",
+      "submit": "Szukaj",
+      "noResults": "Nie znaleziono wyników"
+    },
+    "preview": {
+      "title": "Podgląd",
+      "subscribe": "Subskrybuj ten kanał"
+    },
+    "error": {
+      "channelNotFound": "Nie znaleziono kanału",
+      "feedNotFound": "Nie znaleziono kanału RSS",
+      "invalidUrl": "Nieprawidłowy URL",
+      "invalidAction": "Nieprawidłowa akcja"
+    }
+  }
+}

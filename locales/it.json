@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "Lettore",
+      "empty": "Nessun elemento da visualizzare",
+      "markAllRead": "Segna tutto come letto",
+      "showRead": "Mostra letti ({{count}})",
+      "hideRead": "Nascondi elementi letti",
+      "allRead": "Tutto aggiornato!",
+      "newer": "Più recente",
+      "older": "Più vecchio"
+    },
+    "channels": {
+      "title": "Canali",
+      "name": "Nome del canale",
+      "new": "Nuovo canale",
+      "create": "Crea canale",
+      "delete": "Elimina canale",
+      "settings": "Impostazioni del canale",
+      "empty": "Nessun canale ancora. Creane uno per iniziare.",
+      "notifications": "Notifiche"
+    },
+    "timeline": {
+      "title": "Timeline",
+      "empty": "Nessun elemento in questo canale",
+      "markRead": "Segna come letto",
+      "markUnread": "Segna come non letto",
+      "remove": "Rimuovi"
+    },
+    "feeds": {
+      "title": "Feed",
+      "follow": "Segui",
+      "subscribe": "Iscriviti a un feed",
+      "unfollow": "Smetti di seguire",
+      "empty": "Nessun feed seguito in questo canale",
+      "url": "URL del feed",
+      "urlPlaceholder": "https://esempio.com/feed.xml",
+      "edit": "Modifica feed",
+      "rediscover": "Riscopri feed",
+      "refresh": "Aggiorna ora",
+      "status": {
+        "active": "Attivo",
+        "error": "Errore",
+        "stale": "Obsoleto"
+      }
+    },
+    "item": {
+      "reply": "Rispondi",
+      "like": "Mi piace",
+      "repost": "Ricondividi",
+      "bookmark": "Segnalibro",
+      "viewOriginal": "Visualizza originale"
+    },
+    "compose": {
+      "title": "Scrivi",
+      "content": "A cosa stai pensando?",
+      "comment": "Aggiungi un commento (facoltativo)",
+      "commentHint": "Il tuo commento sarà incluso quando questo viene sindacato",
+      "syndicateTo": "Sindaca a",
+      "syndicateHint": "Seleziona dove pubblicare questo",
+      "submit": "Pubblica",
+      "cancel": "Annulla",
+      "replyTo": "In risposta a",
+      "likeOf": "Mi piace",
+      "repostOf": "Ricondivisione",
+      "bookmarkOf": "Segnalibro"
+    },
+    "settings": {
+      "title": "Impostazioni di {{channel}}",
+      "excludeTypes": "Escludi tipi di interazione",
+      "excludeTypesHelp": "Seleziona i tipi di post da nascondere da questo canale",
+      "excludeRegex": "Pattern di esclusione",
+      "excludeRegexHelp": "Espressione regolare per filtrare i contenuti corrispondenti",
+      "save": "Salva impostazioni",
+      "dangerZone": "Zona pericolosa",
+      "deleteWarning": "L'eliminazione di questo canale rimuoverà permanentemente tutti i feed e gli elementi. Questa azione non può essere annullata.",
+      "deleteConfirm": "Sei sicuro di voler eliminare questo canale e tutti i suoi contenuti?",
+      "delete": "Elimina canale",
+      "types": {
+        "like": "Mi piace",
+        "repost": "Ricondivisioni",
+        "bookmark": "Segnalibri",
+        "reply": "Risposte",
+        "checkin": "Check-in"
+      }
+    },
+    "search": {
+      "title": "Cerca",
+      "placeholder": "Inserisci URL o termine di ricerca",
+      "submit": "Cerca",
+      "noResults": "Nessun risultato trovato"
+    },
+    "preview": {
+      "title": "Anteprima",
+      "subscribe": "Iscriviti a questo feed"
+    },
+    "error": {
+      "channelNotFound": "Canale non trovato",
+      "feedNotFound": "Feed non trovato",
+      "invalidUrl": "URL non valido",
+      "invalidAction": "Azione non valida"
+    }
+  }
+}

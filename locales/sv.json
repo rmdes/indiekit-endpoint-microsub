@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "Läsare",
+      "empty": "Inga objekt att visa",
+      "markAllRead": "Markera allt som läst",
+      "showRead": "Visa lästa ({{count}})",
+      "hideRead": "Dölj lästa objekt",
+      "allRead": "Allt är uppdaterat!",
+      "newer": "Nyare",
+      "older": "Äldre"
+    },
+    "channels": {
+      "title": "Kanaler",
+      "name": "Kanalnamn",
+      "new": "Ny kanal",
+      "create": "Skapa kanal",
+      "delete": "Ta bort kanal",
+      "settings": "Kanalinställningar",
+      "empty": "Inga kanaler än. Skapa en för att komma igång.",
+      "notifications": "Notifieringar"
+    },
+    "timeline": {
+      "title": "Tidslinje",
+      "empty": "Inga objekt i denna kanal",
+      "markRead": "Markera som läst",
+      "markUnread": "Markera som oläst",
+      "remove": "Ta bort"
+    },
+    "feeds": {
+      "title": "Flöden",
+      "follow": "Följ",
+      "subscribe": "Prenumerera på ett flöde",
+      "unfollow": "Sluta följa",
+      "empty": "Inga flöden följda i denna kanal",
+      "url": "Flödes-URL",
+      "urlPlaceholder": "https://exempel.se/feed.xml",
+      "edit": "Redigera flöde",
+      "rediscover": "Återupptäck flöde",
+      "refresh": "Uppdatera nu",
+      "status": {
+        "active": "Aktiv",
+        "error": "Fel",
+        "stale": "Föråldrad"
+      }
+    },
+    "item": {
+      "reply": "Svara",
+      "like": "Gilla",
+      "repost": "Dela om",
+      "bookmark": "Bokmärke",
+      "viewOriginal": "Visa original"
+    },
+    "compose": {
+      "title": "Skriv",
+      "content": "Vad tänker du på?",
+      "comment": "Lägg till en kommentar (valfritt)",
+      "commentHint": "Din kommentar kommer att inkluderas när detta syndikeras",
+      "syndicateTo": "Syndikera till",
+      "syndicateHint": "Välj var detta ska korspostas",
+      "submit": "Publicera",
+      "cancel": "Avbryt",
+      "replyTo": "Svarar på",
+      "likeOf": "Gillar",
+      "repostOf": "Delar om",
+      "bookmarkOf": "Bokmärker"
+    },
+    "settings": {
+      "title": "{{channel}}-inställningar",
+      "excludeTypes": "Uteslut interaktionstyper",
+      "excludeTypesHelp": "Välj typer av inlägg att dölja från denna kanal",
+      "excludeRegex": "Uteslutningsmönster",
+      "excludeRegexHelp": "Reguljärt uttryck för att filtrera matchande innehåll",
+      "save": "Spara inställningar",
+      "dangerZone": "Farozonen",
+      "deleteWarning": "Att ta bort denna kanal kommer permanent ta bort alla flöden och objekt. Denna åtgärd kan inte ångras.",
+      "deleteConfirm": "Är du säker på att du vill ta bort denna kanal och allt dess innehåll?",
+      "delete": "Ta bort kanal",
+      "types": {
+        "like": "Gillningar",
+        "repost": "Omdelningar",
+        "bookmark": "Bokmärken",
+        "reply": "Svar",
+        "checkin": "Incheckningar"
+      }
+    },
+    "search": {
+      "title": "Sök",
+      "placeholder": "Ange URL eller sökterm",
+      "submit": "Sök",
+      "noResults": "Inga resultat hittades"
+    },
+    "preview": {
+      "title": "Förhandsvisning",
+      "subscribe": "Prenumerera på detta flöde"
+    },
+    "error": {
+      "channelNotFound": "Kanal hittades inte",
+      "feedNotFound": "Flöde hittades inte",
+      "invalidUrl": "Ogiltig URL",
+      "invalidAction": "Ogiltig åtgärd"
+    }
+  }
+}

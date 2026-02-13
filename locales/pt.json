@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "Leitor",
+      "empty": "Nenhum item para exibir",
+      "markAllRead": "Marcar tudo como lido",
+      "showRead": "Mostrar lidos ({{count}})",
+      "hideRead": "Ocultar itens lidos",
+      "allRead": "Tudo em dia!",
+      "newer": "Mais recente",
+      "older": "Mais antigo"
+    },
+    "channels": {
+      "title": "Canais",
+      "name": "Nome do canal",
+      "new": "Novo canal",
+      "create": "Criar canal",
+      "delete": "Eliminar canal",
+      "settings": "Definições do canal",
+      "empty": "Ainda não há canais. Crie um para começar.",
+      "notifications": "Notificações"
+    },
+    "timeline": {
+      "title": "Cronologia",
+      "empty": "Nenhum item neste canal",
+      "markRead": "Marcar como lido",
+      "markUnread": "Marcar como não lido",
+      "remove": "Remover"
+    },
+    "feeds": {
+      "title": "Feeds",
+      "follow": "Seguir",
+      "subscribe": "Subscrever um feed",
+      "unfollow": "Deixar de seguir",
+      "empty": "Nenhum feed seguido neste canal",
+      "url": "URL do feed",
+      "urlPlaceholder": "https://exemplo.com/feed.xml",
+      "edit": "Editar feed",
+      "rediscover": "Redescobrir feed",
+      "refresh": "Actualizar agora",
+      "status": {
+        "active": "Activo",
+        "error": "Erro",
+        "stale": "Desactualizado"
+      }
+    },
+    "item": {
+      "reply": "Responder",
+      "like": "Gosto",
+      "repost": "Partilhar novamente",
+      "bookmark": "Marcador",
+      "viewOriginal": "Ver original"
+    },
+    "compose": {
+      "title": "Escrever",
+      "content": "O que está a pensar?",
+      "comment": "Adicionar um comentário (opcional)",
+      "commentHint": "O seu comentário será incluído quando isto for sindicado",
+      "syndicateTo": "Sindicar para",
+      "syndicateHint": "Seleccione onde publicar isto",
+      "submit": "Publicar",
+      "cancel": "Cancelar",
+      "replyTo": "A responder a",
+      "likeOf": "A gostar",
+      "repostOf": "A partilhar novamente",
+      "bookmarkOf": "A adicionar marcador"
+    },
+    "settings": {
+      "title": "Definições de {{channel}}",
+      "excludeTypes": "Excluir tipos de interacção",
+      "excludeTypesHelp": "Seleccione os tipos de publicações a ocultar deste canal",
+      "excludeRegex": "Padrão de exclusão",
+      "excludeRegexHelp": "Expressão regular para filtrar conteúdo correspondente",
+      "save": "Guardar definições",
+      "dangerZone": "Zona de perigo",
+      "deleteWarning": "Eliminar este canal removerá permanentemente todos os feeds e itens. Esta acção não pode ser desfeita.",
+      "deleteConfirm": "Tem a certeza de que deseja eliminar este canal e todo o seu conteúdo?",
+      "delete": "Eliminar canal",
+      "types": {
+        "like": "Gostos",
+        "repost": "Partilhas",
+        "bookmark": "Marcadores",
+        "reply": "Respostas",
+        "checkin": "Check-ins"
+      }
+    },
+    "search": {
+      "title": "Pesquisar",
+      "placeholder": "Introduza URL ou termo de pesquisa",
+      "submit": "Pesquisar",
+      "noResults": "Nenhum resultado encontrado"
+    },
+    "preview": {
+      "title": "Pré-visualização",
+      "subscribe": "Subscrever este feed"
+    },
+    "error": {
+      "channelNotFound": "Canal não encontrado",
+      "feedNotFound": "Feed não encontrado",
+      "invalidUrl": "URL inválido",
+      "invalidAction": "Acção inválida"
+    }
+  }
+}

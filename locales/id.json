@@ -1,0 +1,104 @@
+{
+  "microsub": {
+    "reader": {
+      "title": "Pembaca",
+      "empty": "Tidak ada item untuk ditampilkan",
+      "markAllRead": "Tandai semua sudah dibaca",
+      "showRead": "Tampilkan yang sudah dibaca ({{count}})",
+      "hideRead": "Sembunyikan item yang sudah dibaca",
+      "allRead": "Semua sudah terbaca!",
+      "newer": "Lebih baru",
+      "older": "Lebih lama"
+    },
+    "channels": {
+      "title": "Kanal",
+      "name": "Nama kanal",
+      "new": "Kanal baru",
+      "create": "Buat kanal",
+      "delete": "Hapus kanal",
+      "settings": "Pengaturan kanal",
+      "empty": "Belum ada kanal. Buat satu untuk memulai.",
+      "notifications": "Notifikasi"
+    },
+    "timeline": {
+      "title": "Lini masa",
+      "empty": "Tidak ada item di kanal ini",
+      "markRead": "Tandai sudah dibaca",
+      "markUnread": "Tandai belum dibaca",
+      "remove": "Hapus"
+    },
+    "feeds": {
+      "title": "Umpan",
+      "follow": "Ikuti",
+      "subscribe": "Berlangganan umpan",
+      "unfollow": "Berhenti mengikuti",
+      "empty": "Tidak ada umpan yang diikuti di kanal ini",
+      "url": "URL umpan",
+      "urlPlaceholder": "https://contoh.com/feed.xml",
+      "edit": "Edit umpan",
+      "rediscover": "Temukan ulang umpan",
+      "refresh": "Segarkan sekarang",
+      "status": {
+        "active": "Aktif",
+        "error": "Kesalahan",
+        "stale": "Basi"
+      }
+    },
+    "item": {
+      "reply": "Balas",
+      "like": "Suka",
+      "repost": "Pos ulang",
+      "bookmark": "Tandai halaman",
+      "viewOriginal": "Lihat asli"
+    },
+    "compose": {
+      "title": "Tulis",
+      "content": "Apa yang Anda pikirkan?",
+      "comment": "Tambahkan komentar (opsional)",
+      "commentHint": "Komentar Anda akan disertakan saat ini disindikasikan",
+      "syndicateTo": "Sindikasikan ke",
+      "syndicateHint": "Pilih di mana akan memposting silang ini",
+      "submit": "Kirim",
+      "cancel": "Batal",
+      "replyTo": "Membalas ke",
+      "likeOf": "Menyukai",
+      "repostOf": "Memposting ulang",
+      "bookmarkOf": "Menandai halaman"
+    },
+    "settings": {
+      "title": "Pengaturan {{channel}}",
+      "excludeTypes": "Kecualikan jenis interaksi",
+      "excludeTypesHelp": "Pilih jenis kiriman untuk disembunyikan dari kanal ini",
+      "excludeRegex": "Pola pengecualian",
+      "excludeRegexHelp": "Ekspresi reguler untuk menyaring konten yang cocok",
+      "save": "Simpan pengaturan",
+      "dangerZone": "Zona bahaya",
+      "deleteWarning": "Menghapus kanal ini akan menghapus semua umpan dan item secara permanen. Tindakan ini tidak dapat dibatalkan.",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus kanal ini dan semua kontennya?",
+      "delete": "Hapus kanal",
+      "types": {
+        "like": "Suka",
+        "repost": "Pos ulang",
+        "bookmark": "Tandai halaman",
+        "reply": "Balasan",
+        "checkin": "Check-in"
+      }
+    },
+    "search": {
+      "title": "Cari",
+      "placeholder": "Masukkan URL atau istilah pencarian",
+      "submit": "Cari",
+      "noResults": "Tidak ada hasil yang ditemukan"
+    },
+    "preview": {
+      "title": "Pratinjau",
+      "subscribe": "Berlangganan umpan ini"
+    },
+    "error": {
+      "channelNotFound": "Kanal tidak ditemukan",
+      "feedNotFound": "Umpan tidak ditemukan",
+      "invalidUrl": "URL tidak valid",
+      "invalidAction": "Tindakan tidak valid"
+    }
+  }
+}
