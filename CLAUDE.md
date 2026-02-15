@@ -5,7 +5,7 @@
 `@rmdes/indiekit-endpoint-microsub` is a comprehensive Microsub social reader plugin for Indiekit. It implements the Microsub protocol for subscribing to feeds, organizing them into channels, and reading posts in a unified timeline interface. The plugin provides both a Microsub API endpoint (for compatible clients) and a built-in web-based reader UI.
 
 **Package Name:** `@rmdes/indiekit-endpoint-microsub`
-**Version:** 1.0.28
+**Version:** 1.0.30
 **Type:** ESM module
 **Entry Point:** `index.js`
 
@@ -517,6 +517,47 @@ micropubData.append("h", "entry");
 micropubData.append("in-reply-to", replyToUrl);
 micropubData.append("content", content);
 ```
+
+## Security Hardening (v1.0.30)
+
+The following security fixes were applied in version 1.0.30 (commit 3c8a4b2):
+
+### SSRF Protection in Media Proxy
+
+**File:** `lib/media/proxy.js`
+
+The media proxy (`/microsub/media/:hash`) previously accepted any URL, including internal network addresses. An attacker could craft a proxy URL targeting `http://localhost`, `http://127.0.0.1`, Docker internal IPs, or cloud metadata endpoints.
+
+**Fix:** Added `isPrivateUrl()` blocklist that rejects URLs targeting:
+- `localhost`, `127.x.x.x`, `::1` (loopback)
+- `10.x.x.x`, `172.16-31.x.x`, `192.168.x.x` (RFC 1918 private ranges)
+- `169.254.x.x` (link-local/cloud metadata)
+
+Also changed the error fallback from `response.redirect(url)` (open redirect) to `response.status(404).send("Image not available")`.
+
+### ReDoS Prevention in Search
+
+**File:** `lib/storage/items.js`
+
+The `searchItems()` function built a regex from user input without escaping special characters. A crafted search query could cause catastrophic backtracking.
+
+**Fix:** User input is escaped with `replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&")` before building the regex.
+
+### XSS Prevention in Webmention Content
+
+**File:** `lib/webmention/verifier.js`
+
+Webmention `content.html` was stored as-is from external sources. Malicious HTML could be stored and rendered to users.
+
+**Fix:** Added `sanitize-html` with an allowlist of safe tags (`a`, `p`, `br`, `em`, `strong`, `blockquote`, `ul`, `ol`, `li`, `code`, `pre`) and safe attributes (`href` on `a` tags only). All other HTML is stripped before storage.
+
+### Open Redirect Removal
+
+**File:** `lib/media/proxy.js`
+
+When the media proxy failed to fetch an image, it redirected the user to the original external URL. An attacker could use this as an open redirect.
+
+**Fix:** Returns `404 "Image not available"` instead of redirecting.
 
 ## Known Gotchas
 
