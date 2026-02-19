@@ -1,0 +1,179 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="channel">
+    <header class="channel__header">
+      <a href="{{ baseUrl }}/channels/activitypub" class="back-link">
+        {{ icon("previous") }} Fediverse
+      </a>
+    </header>
+
+    {# Actor profile card #}
+    <div class="actor-profile">
+      <div class="actor-profile__header">
+        {% if actor.photo %}
+        <img src="{{ actor.photo }}"
+             alt=""
+             class="actor-profile__avatar"
+             width="80"
+             height="80"
+             onerror="this.style.display='none'">
+        {% endif %}
+        <div class="actor-profile__info">
+          <h2 class="actor-profile__name">{{ actor.name }}</h2>
+          {% if actor.handle %}
+          <span class="actor-profile__handle">@{{ actor.handle }}</span>
+          {% endif %}
+          {% if actor.summary %}
+          <p class="actor-profile__summary">{{ actor.summary }}</p>
+          {% endif %}
+          <div class="actor-profile__stats">
+            {% if actor.followersCount %}
+            <span>{{ actor.followersCount }} followers</span>
+            {% endif %}
+            {% if actor.followingCount %}
+            <span>{{ actor.followingCount }} following</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="actor-profile__actions">
+        <a href="{{ actor.url }}" class="button button--secondary button--small" target="_blank" rel="noopener">
+          {{ icon("external") }} View profile
+        </a>
+        {% if canFollow %}
+          {% if isFollowing %}
+          <form action="{{ baseUrl }}/actor/unfollow" method="POST" style="display: inline;">
+            <input type="hidden" name="actorUrl" value="{{ actorUrl }}">
+            <button type="submit" class="button button--secondary button--small">
+              {{ icon("checkboxChecked") }} Following
+            </button>
+          </form>
+          {% else %}
+          <form action="{{ baseUrl }}/actor/follow" method="POST" style="display: inline;">
+            <input type="hidden" name="actorUrl" value="{{ actorUrl }}">
+            <input type="hidden" name="actorName" value="{{ actor.name }}">
+            <button type="submit" class="button button--primary button--small">
+              {{ icon("syndicate") }} Follow
+            </button>
+          </form>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+
+    {% if error %}
+    <div class="reader__empty">
+      {{ icon("warning") }}
+      <p>{{ error }}</p>
+    </div>
+    {% elif items.length > 0 %}
+    <div class="timeline" id="timeline">
+      {% for item in items %}
+      <article class="item-card">
+        {# Author #}
+        {% if item.author %}
+        <div class="item-card__author" style="padding: 12px 16px 0;">
+          {% if item.author.photo %}
+          <img src="{{ item.author.photo }}"
+               alt=""
+               class="item-card__author-photo"
+               width="40"
+               height="40"
+               loading="lazy"
+               onerror="this.style.display='none'">
+          {% endif %}
+          <div class="item-card__author-info">
+            <span class="item-card__author-name">{{ item.author.name or "Unknown" }}</span>
+            {% if item.author.url %}
+            <span class="item-card__source">{{ item.author.url | replace("https://", "") | replace("http://", "") }}</span>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        <a href="{{ item.url }}" class="item-card__link" target="_blank" rel="noopener">
+          {# Reply context #}
+          {% if item["in-reply-to"] and item["in-reply-to"].length > 0 %}
+          <div class="item-card__context">
+            {{ icon("reply") }}
+            <span>Reply to</span>
+            <span>{{ item["in-reply-to"][0] | replace("https://", "") | replace("http://", "") | truncate(50) }}</span>
+          </div>
+          {% endif %}
+
+          {# Title #}
+          {% if item.name %}
+          <h3 class="item-card__title">{{ item.name }}</h3>
+          {% endif %}
+
+          {# Content #}
+          {% if item.content %}
+          <div class="item-card__content{% if (item.content.text or '') | length > 300 %} item-card__content--truncated{% endif %}">
+            {% if item.content.html %}
+            {{ item.content.html | safe | striptags | truncate(400) }}
+            {% elif item.content.text %}
+            {{ item.content.text | truncate(400) }}
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {# Tags #}
+          {% if item.category and item.category.length > 0 %}
+          <div class="item-card__categories">
+            {% for cat in item.category | slice(0, 5) %}
+            <span class="item-card__category">#{{ cat }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {# Photos #}
+          {% if item.photo and item.photo.length > 0 %}
+          {% set photoCount = item.photo.length if item.photo.length <= 4 else 4 %}
+          <div class="item-card__photos item-card__photos--{{ photoCount }}">
+            {% for photo in item.photo | slice(0, 4) %}
+            <img src="{{ photo }}" alt="" class="item-card__photo" loading="lazy"
+                 onerror="this.parentElement.removeChild(this)">
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {# Footer #}
+          <footer class="item-card__footer">
+            {% if item.published %}
+            <time datetime="{{ item.published }}" class="item-card__date">
+              {{ item.published | date("PP", { locale: locale, timeZone: application.timeZone }) }}
+            </time>
+            {% endif %}
+          </footer>
+        </a>
+
+        {# Actions #}
+        <div class="item-actions">
+          <a href="{{ item.url }}" class="item-actions__button" target="_blank" rel="noopener" title="View original">
+            {{ icon("external") }}
+          </a>
+          <a href="{{ baseUrl }}/compose?reply={{ item.url | urlencode }}" class="item-actions__button" title="Reply">
+            {{ icon("reply") }}
+          </a>
+          <a href="{{ baseUrl }}/compose?like={{ item.url | urlencode }}" class="item-actions__button" title="Like">
+            {{ icon("like") }}
+          </a>
+          <a href="{{ baseUrl }}/compose?repost={{ item.url | urlencode }}" class="item-actions__button" title="Repost">
+            {{ icon("repost") }}
+          </a>
+          <a href="{{ baseUrl }}/compose?bookmark={{ item.url | urlencode }}" class="item-actions__button" title="Bookmark">
+            {{ icon("bookmark") }}
+          </a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="reader__empty">
+      {{ icon("syndicate") }}
+      <p>No posts found for this actor.</p>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

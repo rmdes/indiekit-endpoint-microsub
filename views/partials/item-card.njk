@@ -63,7 +63,12 @@
       {% endif %}
       <div class="item-card__author-info">
         <span class="item-card__author-name">{{ item.author.name or "Unknown" }}</span>
-        {% if item._source %}
+        {% if item._source and item._source.type === "activitypub" %}
+        <span class="item-card__source">
+          <span class="item-card__badge item-card__badge--ap" title="Fediverse">AP</span>
+          {{ item.author.url | replace("https://", "") | replace("http://", "") }}
+        </span>
+        {% elif item._source %}
         <span class="item-card__source">{{ item._source.name or item._source.url }}</span>
         {% elif item.author.url %}
         <span class="item-card__source">{{ item.author.url | replace("https://", "") | replace("http://", "") }}</span>
@@ -147,6 +152,12 @@
 
   {# Inline actions (Aperture pattern) #}
   <div class="item-actions">
+    {% if item._source and item._source.type === "activitypub" and item.author and item.author.url %}
+    <a href="{{ baseUrl }}/actor?url={{ item.author.url | urlencode }}" class="item-actions__button" title="View actor profile">
+      {{ icon("mention") }}
+      <span class="visually-hidden">Actor profile</span>
+    </a>
+    {% endif %}
     {% if item.url %}
     <a href="{{ item.url }}" class="item-actions__button" target="_blank" rel="noopener" title="View original">
       {{ icon("external") }}

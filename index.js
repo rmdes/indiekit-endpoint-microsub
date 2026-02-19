@@ -8,6 +8,7 @@ import { opmlController } from "./lib/controllers/opml.js";
 import { readerController } from "./lib/controllers/reader.js";
 import { handleMediaProxy } from "./lib/media/proxy.js";
 import { startScheduler, stopScheduler } from "./lib/polling/scheduler.js";
+import { ensureActivityPubChannel } from "./lib/storage/channels.js";
 import { cleanupAllReadItems, createIndexes } from "./lib/storage/items.js";
 import { webmentionReceiver } from "./lib/webmention/receiver.js";
 import { websubHandler } from "./lib/websub/handler.js";
@@ -126,6 +127,9 @@ export default class MicrosubEndpoint {
     readerRouter.get("/search", readerController.searchPage);
     readerRouter.post("/search", readerController.searchFeeds);
     readerRouter.post("/subscribe", readerController.subscribe);
+    readerRouter.get("/actor", readerController.actorProfile);
+    readerRouter.post("/actor/follow", readerController.followActorAction);
+    readerRouter.post("/actor/unfollow", readerController.unfollowActorAction);
     readerRouter.post("/api/mark-read", readerController.markAllRead);
     readerRouter.get("/opml", opmlController.exportOpml);
     router.use("/reader", readerRouter);
@@ -183,6 +187,14 @@ export default class MicrosubEndpoint {
     if (indiekit.database) {
       console.info("[Microsub] Database available, starting scheduler");
       startScheduler(indiekit);
+
+      // Ensure system channels exist
+      ensureActivityPubChannel(indiekit).catch((error) => {
+        console.warn(
+          "[Microsub] ActivityPub channel creation failed:",
+          error.message,
+        );
+      });
 
       // Create indexes for optimal performance (runs in background)
       createIndexes(indiekit).catch((error) => {

@@ -936,3 +936,81 @@
 .feed-edit__action p {
   margin-bottom: var(--space-s);
 }
+
+/* ==========================================================================
+   Actor Profile
+   ========================================================================== */
+
+.actor-profile {
+  background: var(--color-offset);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--space-m);
+  padding: var(--space-m);
+}
+
+.actor-profile__header {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--space-m);
+}
+
+.actor-profile__avatar {
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.actor-profile__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.actor-profile__name {
+  font-size: 1.25em;
+  margin: 0 0 2px;
+}
+
+.actor-profile__handle {
+  color: var(--color-text-muted, #666);
+  font-size: 0.9em;
+}
+
+.actor-profile__summary {
+  font-size: 0.9em;
+  margin: var(--space-xs) 0 0;
+}
+
+.actor-profile__stats {
+  color: var(--color-text-muted, #666);
+  display: flex;
+  font-size: 0.85em;
+  gap: var(--space-m);
+  margin-top: var(--space-xs);
+}
+
+.actor-profile__actions {
+  display: flex;
+  gap: var(--space-s);
+  margin-top: var(--space-s);
+}
+
+/* ==========================================================================
+   AP Badge
+   ========================================================================== */
+
+.item-card__badge {
+  border-radius: 3px;
+  display: inline-block;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  padding: 2px 4px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.item-card__badge--ap {
+  background: #7c3aed20;
+  color: #7c3aed;
+}
