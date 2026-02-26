@@ -111,8 +111,10 @@
     {# Categories/Tags #}
     {% if item.category and item.category.length > 0 %}
     <div class="item-card__categories">
-      {% for cat in item.category | slice(0, 5) %}
+      {% for cat in item.category %}
+      {% if loop.index0 < 5 %}
       <span class="item-card__category">#{{ cat | replace("#", "") }}</span>
+      {% endif %}
       {% endfor %}
     </div>
     {% endif %}
@@ -121,12 +123,14 @@
     {% if item.photo and item.photo.length > 0 %}
     {% set photoCount = item.photo.length if item.photo.length <= 4 else 4 %}
     <div class="item-card__photos item-card__photos--{{ photoCount }}">
-      {% for photo in item.photo | slice(0, 4) %}
+      {% for photo in item.photo %}
+      {% if loop.index0 < 4 %}
       <img src="{{ photo }}"
            alt=""
            class="item-card__photo"
            loading="lazy"
            onerror="this.parentElement.removeChild(this)">
+      {% endif %}
       {% endfor %}
     </div>
     {% endif %}
