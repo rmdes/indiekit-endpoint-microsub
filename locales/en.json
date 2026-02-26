@@ -94,6 +94,11 @@
       "title": "Preview",
       "subscribe": "Subscribe to this feed"
     },
+    "views": {
+      "channels": "Channels",
+      "deck": "Deck",
+      "timeline": "Timeline"
+    },
     "error": {
       "channelNotFound": "Channel not found",
       "feedNotFound": "Feed not found",

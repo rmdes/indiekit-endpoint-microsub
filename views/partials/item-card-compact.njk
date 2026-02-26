@@ -1,0 +1,37 @@
+{# Compact item card for deck columns #}
+<article class="item-card-compact{% if item._is_read %} item-card-compact--read{% endif %}"
+         data-item-id="{{ item._id }}">
+  <a href="{{ readerBaseUrl }}/item/{{ item._id }}" class="item-card-compact__link">
+    {% if item.photo and item.photo.length > 0 %}
+    <img src="{{ item.photo[0] }}"
+         alt=""
+         class="item-card-compact__photo"
+         loading="lazy"
+         onerror="this.style.display='none'">
+    {% endif %}
+    <div class="item-card-compact__body">
+      {% if item.name %}
+      <h4 class="item-card-compact__title">{{ item.name }}</h4>
+      {% elif item.content %}
+      <p class="item-card-compact__text">
+        {% if item.content.text %}{{ item.content.text | truncate(80) }}{% elif item.content.html %}{{ item.content.html | safe | striptags | truncate(80) }}{% endif %}
+      </p>
+      {% endif %}
+      <div class="item-card-compact__meta">
+        {% if item._source %}
+        <span class="item-card-compact__source">{{ item._source.name or item._source.url }}</span>
+        {% elif item.author %}
+        <span class="item-card-compact__source">{{ item.author.name }}</span>
+        {% endif %}
+        {% if item.published %}
+        <time datetime="{{ item.published }}" class="item-card-compact__date">
+          {{ item.published | date("PP") }}
+        </time>
+        {% endif %}
+      </div>
+    </div>
+    {% if not item._is_read %}
+    <span class="item-card-compact__unread" aria-label="Unread"></span>
+    {% endif %}
+  </a>
+</article>

@@ -132,6 +132,10 @@ export default class MicrosubEndpoint {
     readerRouter.post("/actor/unfollow", readerController.unfollowActorAction);
     readerRouter.post("/api/mark-read", readerController.markAllRead);
     readerRouter.get("/opml", opmlController.exportOpml);
+    readerRouter.get("/timeline", readerController.timeline);
+    readerRouter.get("/deck", readerController.deck);
+    readerRouter.get("/deck/settings", readerController.deckSettings);
+    readerRouter.post("/deck/settings", readerController.saveDeckSettings);
     router.use("/reader", readerRouter);
 
     return router;
@@ -171,6 +175,7 @@ export default class MicrosubEndpoint {
     indiekit.addCollection("microsub_notifications");
     indiekit.addCollection("microsub_muted");
     indiekit.addCollection("microsub_blocked");
+    indiekit.addCollection("microsub_deck_config");
 
     console.info("[Microsub] Registered MongoDB collections");
 

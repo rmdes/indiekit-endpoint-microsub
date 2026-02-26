@@ -1,0 +1,33 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="settings">
+    <header>
+      <a href="{{ baseUrl }}/deck" class="back-link">
+        {{ __("microsub.views.deck") }}
+      </a>
+      <h1>Deck columns</h1>
+    </header>
+
+    <form action="{{ baseUrl }}/deck/settings" method="POST">
+      <p>Select which channels appear as columns in your deck, and their order.</p>
+
+      <div class="deck-settings__channels">
+        {% for channel in channels %}
+        {% if channel.uid !== "notifications" %}
+        <label class="deck-settings__channel">
+          <input type="checkbox" name="columns" value="{{ channel._id }}"
+            {% if channel._id.toString() in selectedIds %}checked{% endif %}>
+          <span class="timeline-view__filter-color" style="background: {{ channel.color }}"></span>
+          {{ channel.name }}
+        </label>
+        {% endif %}
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="button button--primary">
+        Save deck configuration
+      </button>
+    </form>
+  </div>
+{% endblock %}

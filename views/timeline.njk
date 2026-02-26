@@ -1,0 +1,100 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="timeline-view">
+    <header class="timeline-view__header">
+      <h1>{{ __("microsub.views.timeline") }}</h1>
+      <div class="timeline-view__actions">
+        {% if channels.length > 0 %}
+        <details class="timeline-view__filter">
+          <summary class="button button--secondary button--small">
+            Filter channels
+          </summary>
+          <form action="{{ baseUrl }}/timeline" method="GET" class="timeline-view__filter-form">
+            {% for ch in channels %}
+            {% if ch.uid !== "notifications" %}
+            <label class="timeline-view__filter-label">
+              <input type="checkbox" name="exclude" value="{{ ch._id }}"
+                {% if excludeIds and ch._id.toString() in excludeIds %}checked{% endif %}>
+              <span class="timeline-view__filter-color" style="background: {{ ch.color }}"></span>
+              {{ ch.name }}
+            </label>
+            {% endif %}
+            {% endfor %}
+            <button type="submit" class="button button--primary button--small">Apply</button>
+          </form>
+        </details>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if items.length > 0 %}
+    <div class="timeline" id="timeline">
+      {% for item in items %}
+      <div class="timeline-view__item" style="border-left: 4px solid {{ item._channelColor or '#ccc' }}">
+        {% include "partials/item-card.njk" %}
+        {% if item._channelName %}
+        <span class="timeline-view__channel-label" style="color: {{ item._channelColor or '#888' }}">
+          {{ item._channelName }}
+        </span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if paging %}
+    <nav class="timeline__paging" aria-label="Pagination">
+      {% if paging.before %}
+      <a href="?before={{ paging.before }}" class="button button--secondary">
+        {{ __("microsub.reader.newer") }}
+      </a>
+      {% else %}
+      <span></span>
+      {% endif %}
+      {% if paging.after %}
+      <a href="?after={{ paging.after }}" class="button button--secondary">
+        {{ __("microsub.reader.older") }}
+      </a>
+      {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="reader__empty">
+      <p>{{ __("microsub.reader.empty") }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <script type="module">
+    const timeline = document.getElementById('timeline');
+    if (timeline) {
+      const items = Array.from(timeline.querySelectorAll('.item-card'));
+      let currentIndex = -1;
+
+      function focusItem(index) {
+        if (items[currentIndex]) items[currentIndex].classList.remove('item-card--focused');
+        currentIndex = Math.max(0, Math.min(index, items.length - 1));
+        if (items[currentIndex]) {
+          items[currentIndex].classList.add('item-card--focused');
+          items[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        switch(e.key) {
+          case 'j': e.preventDefault(); focusItem(currentIndex + 1); break;
+          case 'k': e.preventDefault(); focusItem(currentIndex - 1); break;
+          case 'o': case 'Enter':
+            e.preventDefault();
+            if (items[currentIndex]) {
+              const link = items[currentIndex].querySelector('.item-card__link');
+              if (link) link.click();
+            }
+            break;
+        }
+      });
+    }
+  </script>
+{% endblock %}

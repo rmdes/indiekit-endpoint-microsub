@@ -1,0 +1,52 @@
+{% extends "layouts/reader.njk" %}
+
+{% block reader %}
+  <div class="deck">
+    <header class="deck__header">
+      <h1>{{ __("microsub.views.deck") }}</h1>
+      <a href="{{ baseUrl }}/deck/settings" class="button button--secondary button--small">
+        Configure columns
+      </a>
+    </header>
+
+    {% if columns.length > 0 %}
+    <div class="deck__columns">
+      {% for col in columns %}
+      <div class="deck__column" data-channel-uid="{{ col.channel.uid }}">
+        <div class="deck__column-header" style="border-top: 3px solid {{ col.channel.color or '#ccc' }}">
+          <a href="{{ baseUrl }}/channels/{{ col.channel.uid }}" class="deck__column-name">
+            {{ col.channel.name }}
+          </a>
+          {% if col.channel.unread %}
+          <span class="reader__channel-badge{% if col.channel.unread === true %} reader__channel-badge--dot{% endif %}">
+            {% if col.channel.unread !== true %}{{ col.channel.unread }}{% endif %}
+          </span>
+          {% endif %}
+        </div>
+        <div class="deck__column-items">
+          {% for item in col.items %}
+          {% include "partials/item-card-compact.njk" %}
+          {% endfor %}
+          {% if col.items.length === 0 %}
+          <p class="deck__column-empty">No unread items</p>
+          {% endif %}
+          {% if col.paging and col.paging.after %}
+          <a href="{{ baseUrl }}/channels/{{ col.channel.uid }}"
+             class="deck__column-more button button--secondary button--small">
+            View more
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="reader__empty">
+      <p>No columns configured. Add channels to your deck.</p>
+      <a href="{{ baseUrl }}/deck/settings" class="button button--primary">
+        Configure deck
+      </a>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

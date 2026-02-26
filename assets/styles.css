@@ -1014,3 +1014,290 @@
   background: #7c3aed20;
   color: #7c3aed;
 }
+
+/* ==========================================================================
+   View Switcher
+   ========================================================================== */
+
+.view-switcher {
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
+}
+
+.view-switcher__button {
+  align-items: center;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: var(--border-radius);
+  color: var(--color-text-muted);
+  display: flex;
+  justify-content: center;
+  padding: var(--space-xs);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.view-switcher__button:hover {
+  background: var(--color-offset);
+  color: var(--color-text);
+}
+
+.view-switcher__button--active {
+  background: var(--color-primary, #333);
+  border-color: var(--color-primary, #333);
+  color: #fff;
+}
+
+.view-switcher__button--active:hover {
+  background: var(--color-primary, #333);
+  color: #fff;
+}
+
+/* ==========================================================================
+   Timeline View (all channels chronological)
+   ========================================================================== */
+
+.timeline-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+.timeline-view__header {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  justify-content: space-between;
+}
+
+.timeline-view__item {
+  border-radius: var(--border-radius);
+  position: relative;
+}
+
+.timeline-view__item .item-card {
+  border-left: none;
+}
+
+.timeline-view__channel-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0 var(--space-s) var(--space-xs);
+}
+
+.timeline-view__filter {
+  position: relative;
+}
+
+.timeline-view__filter-form {
+  background: var(--color-background);
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 200px;
+  padding: var(--space-s);
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+}
+
+.timeline-view__filter-label {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.timeline-view__filter-color {
+  border-radius: 2px;
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+}
+
+/* ==========================================================================
+   Compact Item Card (Deck view)
+   ========================================================================== */
+
+.item-card-compact {
+  background: var(--color-background);
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: background-color 0.2s ease;
+}
+
+.item-card-compact:hover {
+  background: var(--color-offset);
+}
+
+.item-card-compact--read {
+  opacity: 0.7;
+}
+
+.item-card-compact:not(.item-card-compact--read) {
+  border-left: 3px solid rgba(255, 204, 0, 0.8);
+}
+
+.item-card-compact__link {
+  color: inherit;
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-s);
+  text-decoration: none;
+}
+
+.item-card-compact__photo {
+  border-radius: var(--border-radius);
+  flex-shrink: 0;
+  height: 60px;
+  object-fit: cover;
+  width: 60px;
+}
+
+.item-card-compact__body {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.item-card-compact__title {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+  overflow: hidden;
+}
+
+.item-card-compact__text {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  margin: 0;
+  overflow: hidden;
+}
+
+.item-card-compact__meta {
+  color: var(--color-text-muted);
+  display: flex;
+  font-size: 0.75rem;
+  gap: var(--space-xs);
+  margin-top: 2px;
+}
+
+.item-card-compact__source {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-card-compact__date {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.item-card-compact__unread {
+  color: rgba(255, 204, 0, 0.9);
+  flex-shrink: 0;
+  font-size: 0.625rem;
+}
+
+/* ==========================================================================
+   Deck View (TweetDeck-style columns)
+   ========================================================================== */
+
+.deck {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+.deck__header {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  justify-content: space-between;
+}
+
+.deck__columns {
+  display: flex;
+  gap: var(--space-m);
+  overflow-x: auto;
+  padding-bottom: var(--space-s);
+  scroll-snap-type: x mandatory;
+}
+
+.deck__column {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  width: 320px;
+}
+
+.deck__column-header {
+  align-items: center;
+  background: var(--color-offset);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  display: flex;
+  gap: var(--space-s);
+  justify-content: space-between;
+  padding: var(--space-s) var(--space-m);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.deck__column-name {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.deck__column-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: var(--space-xs);
+}
+
+.deck__column-empty {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  padding: var(--space-m);
+  text-align: center;
+}
+
+.deck__column-more {
+  display: block;
+  margin-top: var(--space-xs);
+  text-align: center;
+}
+
+/* Deck settings */
+.deck-settings__channels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: var(--space-m) 0;
+}
+
+.deck-settings__channel {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: var(--space-xs);
+}
