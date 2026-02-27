@@ -202,6 +202,7 @@
             class="item-actions__button item-actions__mark-read"
             data-action="mark-read"
             data-item-id="{{ item._id }}"
+            {% if item._channelUid %}data-channel-uid="{{ item._channelUid }}"{% endif %}
             title="Mark as read">
       {{ icon("checkboxChecked") }}
       <span class="visually-hidden">Mark read</span>

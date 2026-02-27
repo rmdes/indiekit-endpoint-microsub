@@ -95,6 +95,61 @@
             break;
         }
       });
+
+      // Handle individual mark-read buttons
+      const microsubApiUrl = '{{ baseUrl }}'.replace(/\/reader$/, '');
+
+      timeline.addEventListener('click', async (e) => {
+        const button = e.target.closest('.item-actions__mark-read');
+        if (!button) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const itemId = button.dataset.itemId;
+        const channelUid = button.dataset.channelUid;
+        if (!itemId || !channelUid) return;
+
+        button.disabled = true;
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append('action', 'timeline');
+          formData.append('method', 'mark_read');
+          formData.append('channel', channelUid);
+          formData.append('entry', itemId);
+
+          const response = await fetch(microsubApiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData.toString(),
+            credentials: 'same-origin'
+          });
+
+          if (response.ok) {
+            const card = button.closest('.item-card');
+            if (card) {
+              card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+              card.style.opacity = '0';
+              card.style.transform = 'translateX(-20px)';
+              setTimeout(() => {
+                const wrapper = card.closest('.timeline-view__item');
+                if (wrapper) wrapper.remove();
+                else card.remove();
+                if (timeline.querySelectorAll('.item-card').length === 0) {
+                  location.reload();
+                }
+              }, 300);
+            }
+          } else {
+            console.error('Failed to mark item as read');
+            button.disabled = false;
+          }
+        } catch (error) {
+          console.error('Error marking item as read:', error);
+          button.disabled = false;
+        }
+      });
     }
   </script>
 {% endblock %}
