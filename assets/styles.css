@@ -421,6 +421,12 @@
   margin-left: auto;
 }
 
+/* Save for later button */
+.item-actions__save-later--saved {
+  color: var(--color-accent, #4a9eff);
+  opacity: 0.6;
+}
+
 /* ==========================================================================
    Single Item View
    ========================================================================== */

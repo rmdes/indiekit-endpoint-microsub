@@ -150,6 +150,39 @@
           button.disabled = false;
         }
       });
+
+      // Handle save-for-later buttons
+      timeline.addEventListener('click', async (e) => {
+        const button = e.target.closest('.item-actions__save-later');
+        if (!button) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const url = button.dataset.url;
+        const title = button.dataset.title;
+        if (!url) return;
+
+        button.disabled = true;
+
+        try {
+          const response = await fetch('/readlater/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, title: title || url, source: 'microsub' }),
+            credentials: 'same-origin'
+          });
+
+          if (response.ok) {
+            button.classList.add('item-actions__save-later--saved');
+            button.title = 'Saved';
+          } else {
+            button.disabled = false;
+          }
+        } catch {
+          button.disabled = false;
+        }
+      });
     }
   </script>
 {% endblock %}

@@ -208,5 +208,16 @@
       <span class="visually-hidden">Mark read</span>
     </button>
     {% endif %}
+    {% if application.readlaterEndpoint %}
+    <button type="button"
+            class="item-actions__button item-actions__save-later"
+            data-action="save-later"
+            data-url="{{ item.url }}"
+            data-title="{{ item.name or '' }}"
+            title="Save for later">
+      {{ icon("bookmark") }}
+      <span class="visually-hidden">Save for later</span>
+    </button>
+    {% endif %}
   </div>
 </article>
