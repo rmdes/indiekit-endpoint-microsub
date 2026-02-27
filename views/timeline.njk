@@ -31,13 +31,13 @@
     {% if items.length > 0 %}
     <div class="timeline" id="timeline">
       {% for item in items %}
-      <div class="timeline-view__item" style="border-left: 4px solid {{ item._channelColor or '#ccc' }}">
-        {% include "partials/item-card.njk" %}
+      <div class="timeline-view__item">
         {% if item._channelName %}
-        <span class="timeline-view__channel-label" style="color: {{ item._channelColor or '#888' }}">
+        <span class="timeline-view__channel-badge" style="background: {{ item._channelColor or '#888' }}">
           {{ item._channelName }}
         </span>
         {% endif %}
+        {% include "partials/item-card.njk" %}
       </div>
       {% endfor %}
     </div>

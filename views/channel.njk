@@ -3,9 +3,7 @@
 {% block reader %}
   <div class="channel">
     <header class="channel__header">
-      <a href="{{ baseUrl }}/channels" class="back-link">
-        {{ icon("previous") }} {{ __("microsub.channels.title") }}
-      </a>
+      <h1>{{ channel.name }}</h1>
       <div class="channel__actions">
         {% if not showRead and items.length > 0 %}
         <form action="{{ baseUrl }}/api/mark-read" method="POST" style="display: inline;">
