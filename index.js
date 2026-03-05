@@ -9,7 +9,11 @@ import { readerController } from "./lib/controllers/reader.js";
 import { handleMediaProxy } from "./lib/media/proxy.js";
 import { startScheduler, stopScheduler } from "./lib/polling/scheduler.js";
 import { ensureActivityPubChannel } from "./lib/storage/channels.js";
-import { cleanupAllReadItems, createIndexes } from "./lib/storage/items.js";
+import {
+  cleanupAllReadItems,
+  cleanupStaleItems,
+  createIndexes,
+} from "./lib/storage/items.js";
 import { webmentionReceiver } from "./lib/webmention/receiver.js";
 import { websubHandler } from "./lib/websub/handler.js";
 
@@ -209,6 +213,11 @@ export default class MicrosubEndpoint {
       // Cleanup old read items on startup
       cleanupAllReadItems(indiekit).catch((error) => {
         console.warn("[Microsub] Startup cleanup failed:", error.message);
+      });
+
+      // Delete stale items (stripped skeletons + unread older than 30 days)
+      cleanupStaleItems(indiekit).catch((error) => {
+        console.warn("[Microsub] Stale cleanup failed:", error.message);
       });
     } else {
       console.warn(
