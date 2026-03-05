@@ -108,7 +108,8 @@
 
         const itemId = button.dataset.itemId;
         const channelUid = button.dataset.channelUid;
-        if (!itemId || !channelUid) return;
+        const channelId = button.dataset.channelId;
+        if (!itemId || (!channelUid && !channelId)) return;
 
         button.disabled = true;
 
@@ -116,7 +117,7 @@
           const formData = new URLSearchParams();
           formData.append('action', 'timeline');
           formData.append('method', 'mark_read');
-          formData.append('channel', channelUid);
+          formData.append('channel', channelUid || channelId);
           formData.append('entry', itemId);
 
           const response = await fetch(microsubApiUrl, {
