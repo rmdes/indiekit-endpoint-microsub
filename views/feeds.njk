@@ -10,6 +10,12 @@
 
     <h2>{{ __("microsub.feeds.title") }}</h2>
 
+    {% if error %}
+    <div class="notice notice--error" role="alert">
+      {{ error }}
+    </div>
+    {% endif %}
+
     {% if feeds.length > 0 %}
     <div class="feeds__list">
       {% for feed in feeds %}
@@ -27,6 +33,9 @@
           <div class="feeds__details">
             <span class="feeds__name">
               {{ feed.title or feed.url }}
+              {% if feed.feedType %}
+              <span class="badge badge--offset badge--small" title="Feed format">{{ feed.feedType | upper }}</span>
+              {% endif %}
               {% if feed.status == 'error' %}
               <span class="badge badge--red">Error</span>
               {% elif feed.status == 'active' %}
