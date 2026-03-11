@@ -416,7 +416,57 @@
   color: var(--color-background);
 }
 
-/* Mark as read button */
+/* Mark as read — split button group */
+.item-actions__mark-read-group {
+  display: inline-flex;
+  margin-left: auto;
+  position: relative;
+}
+
+.item-actions__mark-read-group .item-actions__mark-read {
+  border-bottom-right-radius: 0;
+  border-right: 0;
+  border-top-right-radius: 0;
+  margin-left: 0;
+}
+
+.item-actions__mark-read-caret {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  font-size: 0.625rem;
+  padding: var(--space-xs) 6px;
+}
+
+.item-actions__mark-read-popover {
+  background: var(--color-background);
+  border: 1px solid var(--color-offset-active);
+  border-radius: var(--border-radius);
+  bottom: calc(100% + 4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: var(--space-xs);
+  position: absolute;
+  right: 0;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.item-actions__mark-source-read {
+  background: transparent;
+  border: 0;
+  border-radius: var(--border-radius);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: var(--font-size-small);
+  padding: var(--space-xs) var(--space-s);
+  text-align: left;
+  width: 100%;
+}
+
+.item-actions__mark-source-read:hover {
+  background: var(--color-offset);
+}
+
+/* Mark as read button (standalone, no split group) */
 .item-actions__mark-read {
   margin-left: auto;
 }

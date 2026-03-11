@@ -4,6 +4,7 @@
 #}
 <article class="item-card{% if item._is_read %} item-card--read{% endif %}"
          data-item-id="{{ item._id }}"
+         data-feed-id="{{ item._feedId or '' }}"
          data-is-read="{{ item._is_read | default(false) }}">
 
   {# Context bar for interactions (Aperture pattern) #}
@@ -198,6 +199,33 @@
       <span class="visually-hidden">Bookmark</span>
     </a>
     {% if not item._is_read %}
+    {% if item._feedId %}
+    <span class="item-actions__mark-read-group">
+      <button type="button"
+              class="item-actions__button item-actions__mark-read"
+              data-action="mark-read"
+              data-item-id="{{ item._id }}"
+              {% if item._channelUid %}data-channel-uid="{{ item._channelUid }}"{% endif %}
+              {% if item._channelId %}data-channel-id="{{ item._channelId }}"{% endif %}
+              title="Mark as read">
+        {{ icon("checkboxChecked") }}
+        <span class="visually-hidden">Mark read</span>
+      </button>
+      <button type="button"
+              class="item-actions__button item-actions__mark-read-caret"
+              aria-label="More mark-read options"
+              title="More options">&#9662;</button>
+      <div class="item-actions__mark-read-popover" hidden>
+        <button type="button"
+                class="item-actions__mark-source-read"
+                data-feed-id="{{ item._feedId }}"
+                {% if item._channelUid %}data-channel-uid="{{ item._channelUid }}"{% endif %}
+                {% if item._channelId %}data-channel-id="{{ item._channelId }}"{% endif %}>
+          Mark {{ item._source.name or item.author.name or "source" }} as read
+        </button>
+      </div>
+    </span>
+    {% else %}
     <button type="button"
             class="item-actions__button item-actions__mark-read"
             data-action="mark-read"
@@ -208,6 +236,7 @@
       {{ icon("checkboxChecked") }}
       <span class="visually-hidden">Mark read</span>
     </button>
+    {% endif %}
     {% endif %}
     {% if application.readlaterEndpoint %}
     <button type="button"
