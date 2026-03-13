@@ -375,7 +375,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-s);
-  padding-top: var(--space-s);
+  padding: var(--space-s) var(--space-m);
 }
 
 .ms-item-actions__button {
