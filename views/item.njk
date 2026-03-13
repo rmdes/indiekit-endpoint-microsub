@@ -1,24 +1,23 @@
 {% extends "layouts/reader.njk" %}
 
 {% block reader %}
-  <article class="item">
+  <article class="ms-item">
     <a href="{{ backUrl or (baseUrl + '/channels') }}" class="back-link">
       {{ icon("previous") }} {{ __("Back") }}
     </a>
 
     {% if item.author %}
-    <header class="item__author">
+    <header class="ms-item__author">
       {% if item.author.photo %}
       <img src="{{ item.author.photo }}"
            alt=""
-           class="item__author-photo"
+           class="ms-item__author-photo"
            width="48"
            height="48"
-           loading="lazy"
-           onerror="this.style.display='none'">
+           loading="lazy">
       {% endif %}
-      <div class="item__author-info">
-        <span class="item__author-name">
+      <div class="ms-item__author-info">
+        <span class="ms-item__author-name">
           {% if item.author.url %}
           <a href="{{ item.author.url }}" target="_blank" rel="noopener">{{ item.author.name or item.author.url }}</a>
           {% else %}
@@ -26,7 +25,7 @@
           {% endif %}
         </span>
         {% if item.published %}
-        <time datetime="{{ item.published }}" class="item__date">
+        <time datetime="{{ item.published }}" class="ms-item__date">
           {{ item.published | date("PPPp", { locale: locale, timeZone: application.timeZone }) }}
         </time>
         {% endif %}
@@ -36,9 +35,9 @@
 
     {# Context for interactions #}
     {% if item["in-reply-to"] or item["like-of"] or item["repost-of"] or item["bookmark-of"] %}
-    <div class="item__context">
+    <div class="ms-item__context">
       {% if item["in-reply-to"] and item["in-reply-to"].length > 0 %}
-      <p class="item__context-label">
+      <p class="ms-item__context-label">
         {{ icon("reply") }} {{ __("Reply to") }}:
         <a href="{{ item['in-reply-to'][0] }}" target="_blank" rel="noopener">
           {{ item["in-reply-to"][0] | replace("https://", "") | replace("http://", "") }}
@@ -46,7 +45,7 @@
       </p>
       {% endif %}
       {% if item["like-of"] and item["like-of"].length > 0 %}
-      <p class="item__context-label">
+      <p class="ms-item__context-label">
         {{ icon("like") }} {{ __("Liked") }}:
         <a href="{{ item['like-of'][0] }}" target="_blank" rel="noopener">
           {{ item["like-of"][0] | replace("https://", "") | replace("http://", "") }}
@@ -54,7 +53,7 @@
       </p>
       {% endif %}
       {% if item["repost-of"] and item["repost-of"].length > 0 %}
-      <p class="item__context-label">
+      <p class="ms-item__context-label">
         {{ icon("repost") }} {{ __("Reposted") }}:
         <a href="{{ item['repost-of'][0] }}" target="_blank" rel="noopener">
           {{ item["repost-of"][0] | replace("https://", "") | replace("http://", "") }}
@@ -62,7 +61,7 @@
       </p>
       {% endif %}
       {% if item["bookmark-of"] and item["bookmark-of"].length > 0 %}
-      <p class="item__context-label">
+      <p class="ms-item__context-label">
         {{ icon("bookmark") }} {{ __("Bookmarked") }}:
         <a href="{{ item['bookmark-of'][0] }}" target="_blank" rel="noopener">
           {{ item["bookmark-of"][0] | replace("https://", "") | replace("http://", "") }}
@@ -73,11 +72,11 @@
     {% endif %}
 
     {% if item.name %}
-    <h2 class="item__title">{{ item.name }}</h2>
+    <h2 class="ms-item__title">{{ item.name }}</h2>
     {% endif %}
 
     {% if item.content %}
-    <div class="item__content prose">
+    <div class="ms-item__content prose">
       {% if item.content.html %}
       {{ item.content.html | safe }}
       {% else %}
@@ -88,19 +87,19 @@
 
     {# Categories #}
     {% if item.category and item.category.length > 0 %}
-    <div class="item-card__categories">
+    <div class="ms-item-card__categories">
       {% for cat in item.category %}
-      <span class="item-card__category">#{{ cat | replace("#", "") }}</span>
+      <span class="ms-item-card__category">#{{ cat | replace("#", "") }}</span>
       {% endfor %}
     </div>
     {% endif %}
 
     {# Photos #}
     {% if item.photo and item.photo.length > 0 %}
-    <div class="item__photos">
+    <div class="ms-item__photos">
       {% for photo in item.photo %}
       <a href="{{ photo }}" target="_blank" rel="noopener">
-        <img src="{{ photo }}" alt="" class="item__photo" loading="lazy">
+        <img src="{{ photo }}" alt="" class="ms-item__photo" loading="lazy">
       </a>
       {% endfor %}
     </div>
@@ -108,7 +107,7 @@
 
     {# Video #}
     {% if item.video and item.video.length > 0 %}
-    <div class="item__media">
+    <div class="ms-item__media">
       {% for video in item.video %}
       <video src="{{ video }}"
              controls
@@ -121,14 +120,14 @@
 
     {# Audio #}
     {% if item.audio and item.audio.length > 0 %}
-    <div class="item__media">
+    <div class="ms-item__media">
       {% for audio in item.audio %}
       <audio src="{{ audio }}" controls preload="metadata"></audio>
       {% endfor %}
     </div>
     {% endif %}
 
-    <footer class="item__actions">
+    <footer class="ms-item__actions">
       {% if item.url %}
       <a href="{{ item.url }}" class="button button--secondary button--small" target="_blank" rel="noopener">
         {{ icon("external") }} {{ __("microsub.item.viewOriginal") }}
@@ -148,7 +147,7 @@
       </a>
       {% if not item._is_read %}
       <button type="button"
-              class="button button--secondary button--small item__mark-read"
+              class="button button--secondary button--small ms-item__mark-read"
               data-item-id="{{ item._id }}"
               data-channel="{{ channel.uid }}">
         {{ icon("checkboxChecked") }} {{ __("microsub.timeline.markRead") }}
@@ -159,7 +158,7 @@
 
   <script type="module">
     // Handle mark-read button
-    const markReadBtn = document.querySelector('.item__mark-read');
+    const markReadBtn = document.querySelector('.ms-item__mark-read');
     if (markReadBtn) {
       markReadBtn.addEventListener('click', async () => {
         const itemId = markReadBtn.dataset.itemId;

@@ -1,7 +1,7 @@
 {% extends "layouts/reader.njk" %}
 
 {% block reader %}
-  <div class="compose">
+  <div class="ms-compose">
     <a href="{{ backUrl or (baseUrl + '/channels') }}" class="back-link">
       {{ icon("previous") }} {{ __("Back") }}
     </a>
@@ -9,7 +9,7 @@
     <h2>{{ __("microsub.compose.title") }}</h2>
 
     {% if replyTo and replyTo is string %}
-    <div class="compose__context">
+    <div class="ms-compose__context">
       {{ icon("reply") }} {{ __("microsub.compose.replyTo") }}:
       <a href="{{ replyTo }}" target="_blank" rel="noopener">
         {{ replyTo | replace("https://", "") | replace("http://", "") }}
@@ -18,7 +18,7 @@
     {% endif %}
 
     {% if likeOf and likeOf is string %}
-    <div class="compose__context">
+    <div class="ms-compose__context">
       {{ icon("like") }} {{ __("microsub.compose.likeOf") }}:
       <a href="{{ likeOf }}" target="_blank" rel="noopener">
         {{ likeOf | replace("https://", "") | replace("http://", "") }}
@@ -27,7 +27,7 @@
     {% endif %}
 
     {% if repostOf and repostOf is string %}
-    <div class="compose__context">
+    <div class="ms-compose__context">
       {{ icon("repost") }} {{ __("microsub.compose.repostOf") }}:
       <a href="{{ repostOf }}" target="_blank" rel="noopener">
         {{ repostOf | replace("https://", "") | replace("http://", "") }}
@@ -36,7 +36,7 @@
     {% endif %}
 
     {% if bookmarkOf and bookmarkOf is string %}
-    <div class="compose__context">
+    <div class="ms-compose__context">
       {{ icon("bookmark") }} {{ __("microsub.compose.bookmarkOf") }}:
       <a href="{{ bookmarkOf }}" target="_blank" rel="noopener">
         {{ bookmarkOf | replace("https://", "") | replace("http://", "") }}
@@ -68,13 +68,13 @@
         attributes: { autofocus: true },
         hint: __("microsub.compose.commentHint") if isAction else false
       }) }}
-      <div class="compose__counter">
+      <div class="ms-compose__counter">
         <span id="char-count">0</span> characters
       </div>
 
       {# Syndication targets #}
       {% if syndicationTargets and syndicationTargets.length %}
-      <fieldset class="compose__syndication">
+      <fieldset class="ms-compose__syndication">
         <legend>{{ __("microsub.compose.syndicateTo") }}</legend>
         <p class="hint">{{ __("microsub.compose.syndicateHint") }}</p>
         {% for target in syndicationTargets %}

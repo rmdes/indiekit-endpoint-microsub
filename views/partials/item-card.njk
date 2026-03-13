@@ -2,7 +2,7 @@
   Item card for timeline display
   Inspired by Aperture/Monocle reader
 #}
-<article class="item-card{% if item._is_read %} item-card--read{% endif %}"
+<article class="ms-item-card{% if item._is_read %} ms-item-card--read{% endif %}"
          data-item-id="{{ item._id }}"
          data-feed-id="{{ item._feedId or '' }}"
          data-is-read="{{ item._is_read | default(false) }}">
@@ -13,7 +13,7 @@
 
   {% if item["like-of"] and item["like-of"].length > 0 %}
   {% set contextUrl = item['like-of'][0].url or item['like-of'][0].value or item['like-of'][0] %}
-  <div class="item-card__context">
+  <div class="ms-item-card__context">
     {{ icon("like") }}
     <span>Liked</span>
     <a href="{{ contextUrl }}" target="_blank" rel="noopener">
@@ -22,7 +22,7 @@
   </div>
   {% elif item["repost-of"] and item["repost-of"].length > 0 %}
   {% set contextUrl = item['repost-of'][0].url or item['repost-of'][0].value or item['repost-of'][0] %}
-  <div class="item-card__context">
+  <div class="ms-item-card__context">
     {{ icon("repost") }}
     <span>Reposted</span>
     <a href="{{ contextUrl }}" target="_blank" rel="noopener">
@@ -31,7 +31,7 @@
   </div>
   {% elif item["in-reply-to"] and item["in-reply-to"].length > 0 %}
   {% set contextUrl = item['in-reply-to'][0].url or item['in-reply-to'][0].value or item['in-reply-to'][0] %}
-  <div class="item-card__context">
+  <div class="ms-item-card__context">
     {{ icon("reply") }}
     <span>Reply to</span>
     <a href="{{ contextUrl }}" target="_blank" rel="noopener">
@@ -40,7 +40,7 @@
   </div>
   {% elif item["bookmark-of"] and item["bookmark-of"].length > 0 %}
   {% set contextUrl = item['bookmark-of'][0].url or item['bookmark-of'][0].value or item['bookmark-of'][0] %}
-  <div class="item-card__context">
+  <div class="ms-item-card__context">
     {{ icon("bookmark") }}
     <span>Bookmarked</span>
     <a href="{{ contextUrl }}" target="_blank" rel="noopener">
@@ -49,43 +49,24 @@
   </div>
   {% endif %}
 
-  <a href="{{ baseUrl }}/item/{{ item._id }}" class="item-card__link">
+  <a href="{{ baseUrl }}/item/{{ item._id }}" class="ms-item-card__link">
     {# Author #}
     {% if item.author %}
-    <div class="item-card__author">
+    <div class="ms-item-card__author">
       {% if item.author.photo %}
       <img src="{{ item.author.photo }}"
            alt=""
-           class="item-card__author-photo"
+           class="ms-item-card__author-photo"
            width="40"
            height="40"
-           loading="lazy"
-           onerror="this.style.display='none'">
+           loading="lazy">
       {% endif %}
-      <div class="item-card__author-info">
-        <span class="item-card__author-name">{{ item.author.name or "Unknown" }}</span>
+      <div class="ms-item-card__author-info">
+        <span class="ms-item-card__author-name">{{ item.author.name or "Unknown" }}</span>
         {% if item._source %}
-        <span class="item-card__source">
-          {# Protocol source indicator #}
-          {% set sourceUrl = item._source.url or item.author.url or "" %}
-          {% set sourceType = item._source.source_type or item._source.type %}
-          {% if sourceType == "activitypub" or sourceType == "mastodon" or ("mastodon." in sourceUrl) or ("mstdn." in sourceUrl) or ("fosstodon." in sourceUrl) or ("pleroma." in sourceUrl) or ("misskey." in sourceUrl) %}
-          <svg class="item-card__source-icon" viewBox="0 0 24 24" fill="#6364ff" aria-label="Fediverse" style="width:12px;height:12px;vertical-align:middle;margin-right:3px;display:inline-block">
-            <path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 0 0 .023-.043v-1.809a.052.052 0 0 0-.02-.041.053.053 0 0 0-.046-.01 20.282 20.282 0 0 1-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 0 1-.319-1.433.053.053 0 0 1 .066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112 0-1.668.668-1.668 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311 0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13 0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/>
-          </svg>
-          {% elif sourceType == "bluesky" or ("bsky.app" in sourceUrl) or ("bluesky" in sourceUrl) %}
-          <svg class="item-card__source-icon" viewBox="0 0 568 501" fill="#0085ff" aria-label="ATmosphere" style="width:12px;height:12px;vertical-align:middle;margin-right:3px;display:inline-block">
-            <path d="M123.121 33.664C188.241 82.553 258.281 181.68 284 234.873c25.719-53.192 95.759-152.32 160.879-201.21C491.866-1.611 568-28.906 568 57.947c0 17.346-9.945 145.713-15.778 166.555-20.275 72.453-94.155 90.933-159.875 79.748C507.222 323.8 536.444 388.56 473.333 453.32c-119.86 122.992-172.272-30.859-185.702-70.281-2.462-7.227-3.614-10.608-3.631-7.733-.017-2.875-1.169.506-3.631 7.733-13.43 39.422-65.842 193.273-185.702 70.281-63.111-64.76-33.89-129.52 80.986-149.071-65.72 11.185-139.6-7.295-159.875-79.748C9.945 203.659 0 75.291 0 57.946 0-28.906 76.135-1.612 123.121 33.664Z"/>
-          </svg>
-          {% else %}
-          <svg class="item-card__source-icon" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" aria-label="Web" style="width:12px;height:12px;vertical-align:middle;margin-right:3px;display:inline-block">
-            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-          </svg>
-          {% endif %}
-          {{ item._source.name or item._source.url }}
-        </span>
+        <span class="ms-item-card__source">{{ item._source.name or item._source.url }}</span>
         {% elif item.author.url %}
-        <span class="item-card__source">{{ item.author.url | replace("https://", "") | replace("http://", "") }}</span>
+        <span class="ms-item-card__source">{{ item.author.url | replace("https://", "") | replace("http://", "") }}</span>
         {% endif %}
       </div>
     </div>
@@ -93,12 +74,12 @@
 
     {# Title (for articles) #}
     {% if item.name %}
-    <h3 class="item-card__title">{{ item.name }}</h3>
+    <h3 class="ms-item-card__title">{{ item.name }}</h3>
     {% endif %}
 
     {# Content with overflow handling #}
     {% if item.summary or item.content %}
-    <div class="item-card__content{% if (item.content.text or item.summary or '') | length > 300 %} item-card__content--truncated{% endif %}">
+    <div class="ms-item-card__content{% if (item.content.text or item.summary or '') | length > 300 %} ms-item-card__content--truncated{% endif %}">
       {% if item.content.html %}
       {{ item.content.html | safe | striptags | truncate(400) }}
       {% elif item.content.text %}
@@ -111,10 +92,10 @@
 
     {# Categories/Tags #}
     {% if item.category and item.category.length > 0 %}
-    <div class="item-card__categories">
+    <div class="ms-item-card__categories">
       {% for cat in item.category %}
       {% if loop.index0 < 5 %}
-      <span class="item-card__category">#{{ cat | replace("#", "") }}</span>
+      <span class="ms-item-card__category">#{{ cat | replace("#", "") }}</span>
       {% endif %}
       {% endfor %}
     </div>
@@ -123,14 +104,13 @@
     {# Photo grid (Aperture multi-photo pattern) #}
     {% if item.photo and item.photo.length > 0 %}
     {% set photoCount = item.photo.length if item.photo.length <= 4 else 4 %}
-    <div class="item-card__photos item-card__photos--{{ photoCount }}">
+    <div class="ms-item-card__photos ms-item-card__photos--{{ photoCount }}">
       {% for photo in item.photo %}
       {% if loop.index0 < 4 %}
       <img src="{{ photo }}"
            alt=""
-           class="item-card__photo"
-           loading="lazy"
-           onerror="this.parentElement.removeChild(this)">
+           class="ms-item-card__photo"
+           loading="lazy">
       {% endif %}
       {% endfor %}
     </div>
@@ -138,9 +118,9 @@
 
     {# Video preview #}
     {% if item.video and item.video.length > 0 %}
-    <div class="item-card__media">
+    <div class="ms-item-card__media">
       <video src="{{ item.video[0] }}"
-             class="item-card__video"
+             class="ms-item-card__video"
              controls
              preload="metadata"
              {% if item.photo and item.photo.length > 0 %}poster="{{ item.photo[0] }}"{% endif %}>
@@ -150,74 +130,74 @@
 
     {# Audio preview #}
     {% if item.audio and item.audio.length > 0 %}
-    <div class="item-card__media">
-      <audio src="{{ item.audio[0] }}" class="item-card__audio" controls preload="metadata"></audio>
+    <div class="ms-item-card__media">
+      <audio src="{{ item.audio[0] }}" class="ms-item-card__audio" controls preload="metadata"></audio>
     </div>
     {% endif %}
 
     {# Footer with date and actions #}
-    <footer class="item-card__footer">
+    <footer class="ms-item-card__footer">
       {% if item.published %}
-      <time datetime="{{ item.published }}" class="item-card__date">
+      <time datetime="{{ item.published }}" class="ms-item-card__date">
         {{ item.published | date("PP", { locale: locale, timeZone: application.timeZone }) }}
       </time>
       {% endif %}
       {% if not item._is_read %}
-      <span class="item-card__unread" aria-label="Unread">●</span>
+      <span class="ms-item-card__unread" aria-label="Unread">●</span>
       {% endif %}
     </footer>
   </a>
 
   {# Inline actions (Aperture pattern) #}
-  <div class="item-actions">
+  <div class="ms-item-actions">
     {% if item._source and item._source.type === "activitypub" and item.author and item.author.url %}
-    <a href="{{ baseUrl }}/actor?url={{ item.author.url | urlencode }}" class="item-actions__button" title="View actor profile">
+    <a href="{{ baseUrl }}/actor?url={{ item.author.url | urlencode }}" class="ms-item-actions__button" title="View actor profile">
       {{ icon("mention") }}
-      <span class="visually-hidden">Actor profile</span>
+      <span class="-!-visually-hidden">Actor profile</span>
     </a>
     {% endif %}
     {% if item.url %}
-    <a href="{{ item.url }}" class="item-actions__button" target="_blank" rel="noopener" title="View original">
+    <a href="{{ item.url }}" class="ms-item-actions__button" target="_blank" rel="noopener" title="View original">
       {{ icon("external") }}
-      <span class="visually-hidden">Original</span>
+      <span class="-!-visually-hidden">Original</span>
     </a>
     {% endif %}
-    <a href="{{ baseUrl }}/compose?reply={{ item.url | urlencode }}" class="item-actions__button" title="Reply">
+    <a href="{{ baseUrl }}/compose?reply={{ item.url | urlencode }}" class="ms-item-actions__button" title="Reply">
       {{ icon("reply") }}
-      <span class="visually-hidden">Reply</span>
+      <span class="-!-visually-hidden">Reply</span>
     </a>
-    <a href="{{ baseUrl }}/compose?like={{ item.url | urlencode }}" class="item-actions__button" title="Like">
+    <a href="{{ baseUrl }}/compose?like={{ item.url | urlencode }}" class="ms-item-actions__button" title="Like">
       {{ icon("like") }}
-      <span class="visually-hidden">Like</span>
+      <span class="-!-visually-hidden">Like</span>
     </a>
-    <a href="{{ baseUrl }}/compose?repost={{ item.url | urlencode }}" class="item-actions__button" title="Repost">
+    <a href="{{ baseUrl }}/compose?repost={{ item.url | urlencode }}" class="ms-item-actions__button" title="Repost">
       {{ icon("repost") }}
-      <span class="visually-hidden">Repost</span>
+      <span class="-!-visually-hidden">Repost</span>
     </a>
-    <a href="{{ baseUrl }}/compose?bookmark={{ item.url | urlencode }}" class="item-actions__button" title="Bookmark">
+    <a href="{{ baseUrl }}/compose?bookmark={{ item.url | urlencode }}" class="ms-item-actions__button" title="Bookmark">
       {{ icon("bookmark") }}
-      <span class="visually-hidden">Bookmark</span>
+      <span class="-!-visually-hidden">Bookmark</span>
     </a>
     {% if not item._is_read %}
     {% if item._feedId %}
-    <span class="item-actions__mark-read-group">
+    <span class="ms-item-actions__mark-read-group">
       <button type="button"
-              class="item-actions__button item-actions__mark-read"
+              class="ms-item-actions__button ms-item-actions__mark-read"
               data-action="mark-read"
               data-item-id="{{ item._id }}"
               {% if item._channelUid %}data-channel-uid="{{ item._channelUid }}"{% endif %}
               {% if item._channelId %}data-channel-id="{{ item._channelId }}"{% endif %}
               title="Mark as read">
         {{ icon("checkboxChecked") }}
-        <span class="visually-hidden">Mark read</span>
+        <span class="-!-visually-hidden">Mark read</span>
       </button>
       <button type="button"
-              class="item-actions__button item-actions__mark-read-caret"
+              class="ms-item-actions__button ms-item-actions__mark-read-caret"
               aria-label="More mark-read options"
               title="More options">&#9662;</button>
-      <div class="item-actions__mark-read-popover" hidden>
+      <div class="ms-item-actions__mark-read-popover" hidden>
         <button type="button"
-                class="item-actions__mark-source-read"
+                class="ms-item-actions__mark-source-read"
                 data-feed-id="{{ item._feedId }}"
                 {% if item._channelUid %}data-channel-uid="{{ item._channelUid }}"{% endif %}
                 {% if item._channelId %}data-channel-id="{{ item._channelId }}"{% endif %}>
@@ -227,26 +207,26 @@
     </span>
     {% else %}
     <button type="button"
-            class="item-actions__button item-actions__mark-read"
+            class="ms-item-actions__button ms-item-actions__mark-read"
             data-action="mark-read"
             data-item-id="{{ item._id }}"
             {% if item._channelUid %}data-channel-uid="{{ item._channelUid }}"{% endif %}
             {% if item._channelId %}data-channel-id="{{ item._channelId }}"{% endif %}
             title="Mark as read">
       {{ icon("checkboxChecked") }}
-      <span class="visually-hidden">Mark read</span>
+      <span class="-!-visually-hidden">Mark read</span>
     </button>
     {% endif %}
     {% endif %}
     {% if application.readlaterEndpoint %}
     <button type="button"
-            class="item-actions__button item-actions__save-later"
+            class="ms-item-actions__button ms-item-actions__save-later"
             data-action="save-later"
             data-url="{{ item.url }}"
             data-title="{{ item.name or '' }}"
             title="Save for later">
       {{ icon("bookmark") }}
-      <span class="visually-hidden">Save for later</span>
+      <span class="-!-visually-hidden">Save for later</span>
     </button>
     {% endif %}
   </div>

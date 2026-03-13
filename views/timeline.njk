@@ -1,22 +1,22 @@
 {% extends "layouts/reader.njk" %}
 
 {% block reader %}
-  <div class="timeline-view">
-    <header class="timeline-view__header">
+  <div class="ms-timeline-view">
+    <header class="ms-timeline-view__header">
       <h1>{{ __("microsub.views.timeline") }}</h1>
-      <div class="timeline-view__actions">
+      <div class="ms-timeline-view__actions">
         {% if channels.length > 0 %}
-        <details class="timeline-view__filter">
+        <details class="ms-timeline-view__filter">
           <summary class="button button--secondary button--small">
             Filter channels
           </summary>
-          <form action="{{ baseUrl }}/timeline" method="GET" class="timeline-view__filter-form">
+          <form action="{{ baseUrl }}/timeline" method="GET" class="ms-timeline-view__filter-form">
             {% for ch in channels %}
             {% if ch.uid !== "notifications" %}
-            <label class="timeline-view__filter-label">
+            <label class="ms-timeline-view__filter-label">
               <input type="checkbox" name="exclude" value="{{ ch._id }}"
                 {% if excludeIds and ch._id.toString() in excludeIds %}checked{% endif %}>
-              <span class="timeline-view__filter-color" style="background: {{ ch.color }}"></span>
+              <span class="ms-timeline-view__filter-color" style="background: {{ ch.color }}"></span>
               {{ ch.name }}
             </label>
             {% endif %}
@@ -29,11 +29,11 @@
     </header>
 
     {% if items.length > 0 %}
-    <div class="timeline" id="timeline">
+    <div class="ms-timeline" id="timeline">
       {% for item in items %}
-      <div class="timeline-view__item">
+      <div class="ms-timeline-view__item">
         {% if item._channelName %}
-        <span class="timeline-view__channel-badge" style="background: {{ item._channelColor or '#888' }}">
+        <span class="ms-timeline-view__channel-badge" style="background: {{ item._channelColor or '#888' }}">
           {{ item._channelName }}
         </span>
         {% endif %}
@@ -43,7 +43,7 @@
     </div>
 
     {% if paging %}
-    <nav class="timeline__paging" aria-label="Pagination">
+    <nav class="ms-timeline__paging" aria-label="Pagination">
       {% if paging.before %}
       <a href="?before={{ paging.before }}" class="button button--secondary">
         {{ __("microsub.reader.newer") }}
@@ -60,7 +60,7 @@
     {% endif %}
 
     {% else %}
-    <div class="reader__empty">
+    <div class="ms-reader__empty">
       <p>{{ __("microsub.reader.empty") }}</p>
     </div>
     {% endif %}
@@ -69,14 +69,14 @@
   <script type="module">
     const timeline = document.getElementById('timeline');
     if (timeline) {
-      const items = Array.from(timeline.querySelectorAll('.item-card'));
+      const items = Array.from(timeline.querySelectorAll('.ms-item-card'));
       let currentIndex = -1;
 
       function focusItem(index) {
-        if (items[currentIndex]) items[currentIndex].classList.remove('item-card--focused');
+        if (items[currentIndex]) items[currentIndex].classList.remove('ms-item-card--focused');
         currentIndex = Math.max(0, Math.min(index, items.length - 1));
         if (items[currentIndex]) {
-          items[currentIndex].classList.add('item-card--focused');
+          items[currentIndex].classList.add('ms-item-card--focused');
           items[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       }
@@ -89,7 +89,7 @@
           case 'o': case 'Enter':
             e.preventDefault();
             if (items[currentIndex]) {
-              const link = items[currentIndex].querySelector('.item-card__link');
+              const link = items[currentIndex].querySelector('.ms-item-card__link');
               if (link) link.click();
             }
             break;
@@ -100,7 +100,7 @@
       const microsubApiUrl = '{{ baseUrl }}'.replace(/\/reader$/, '');
 
       timeline.addEventListener('click', async (e) => {
-        const button = e.target.closest('.item-actions__mark-read');
+        const button = e.target.closest('.ms-item-actions__mark-read');
         if (!button) return;
 
         e.preventDefault();
@@ -128,16 +128,16 @@
           });
 
           if (response.ok) {
-            const card = button.closest('.item-card');
+            const card = button.closest('.ms-item-card');
             if (card) {
               card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
               card.style.opacity = '0';
               card.style.transform = 'translateX(-20px)';
               setTimeout(() => {
-                const wrapper = card.closest('.timeline-view__item');
+                const wrapper = card.closest('.ms-timeline-view__item');
                 if (wrapper) wrapper.remove();
                 else card.remove();
-                if (timeline.querySelectorAll('.item-card').length === 0) {
+                if (timeline.querySelectorAll('.ms-item-card').length === 0) {
                   location.reload();
                 }
               }, 300);
@@ -154,14 +154,14 @@
 
       // Handle caret toggle for mark-source-read popover
       timeline.addEventListener('click', (e) => {
-        const caret = e.target.closest('.item-actions__mark-read-caret');
+        const caret = e.target.closest('.ms-item-actions__mark-read-caret');
         if (!caret) return;
 
         e.preventDefault();
         e.stopPropagation();
 
         // Close other open popovers
-        for (const p of timeline.querySelectorAll('.item-actions__mark-read-popover:not([hidden])')) {
+        for (const p of timeline.querySelectorAll('.ms-item-actions__mark-read-popover:not([hidden])')) {
           if (p !== caret.nextElementSibling) p.hidden = true;
         }
 
@@ -171,7 +171,7 @@
 
       // Handle mark-source-read button
       timeline.addEventListener('click', async (e) => {
-        const button = e.target.closest('.item-actions__mark-source-read');
+        const button = e.target.closest('.ms-item-actions__mark-source-read');
         if (!button) return;
 
         e.preventDefault();
@@ -200,7 +200,7 @@
 
           if (response.ok) {
             // Animate out all cards from this feed
-            const cards = timeline.querySelectorAll(`.item-card[data-feed-id="${feedId}"]`);
+            const cards = timeline.querySelectorAll(`.ms-item-card[data-feed-id="${feedId}"]`);
             for (const card of cards) {
               card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
               card.style.opacity = '0';
@@ -208,11 +208,11 @@
             }
             setTimeout(() => {
               for (const card of [...cards]) {
-                const wrapper = card.closest('.timeline-view__item');
+                const wrapper = card.closest('.ms-timeline-view__item');
                 if (wrapper) wrapper.remove();
                 else card.remove();
               }
-              if (timeline.querySelectorAll('.item-card').length === 0) {
+              if (timeline.querySelectorAll('.ms-item-card').length === 0) {
                 location.reload();
               }
             }, 300);
@@ -227,8 +227,8 @@
 
       // Close popovers on outside click
       document.addEventListener('click', (e) => {
-        if (!e.target.closest('.item-actions__mark-read-group')) {
-          for (const p of timeline.querySelectorAll('.item-actions__mark-read-popover:not([hidden])')) {
+        if (!e.target.closest('.ms-item-actions__mark-read-group')) {
+          for (const p of timeline.querySelectorAll('.ms-item-actions__mark-read-popover:not([hidden])')) {
             p.hidden = true;
           }
         }
@@ -236,7 +236,7 @@
 
       // Handle save-for-later buttons
       timeline.addEventListener('click', async (e) => {
-        const button = e.target.closest('.item-actions__save-later');
+        const button = e.target.closest('.ms-item-actions__save-later');
         if (!button) return;
 
         e.preventDefault();
@@ -257,7 +257,7 @@
           });
 
           if (response.ok) {
-            button.classList.add('item-actions__save-later--saved');
+            button.classList.add('ms-item-actions__save-later--saved');
             button.title = 'Saved';
           } else {
             button.disabled = false;

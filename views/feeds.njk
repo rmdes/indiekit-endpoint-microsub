@@ -1,8 +1,8 @@
 {% extends "layouts/reader.njk" %}
 
 {% block reader %}
-  <div class="feeds">
-    <header class="feeds__header">
+  <div class="ms-feeds">
+    <header class="ms-feeds__header">
       <a href="{{ baseUrl }}/channels/{{ channel.uid }}" class="back-link">
         {{ icon("previous") }} {{ channel.name }}
       </a>
@@ -11,27 +11,26 @@
     <h2>{{ __("microsub.feeds.title") }}</h2>
 
     {% if error %}
-    <div class="notice notice--error" role="alert">
+    <div class="ms-notice ms-notice--error" role="alert">
       {{ error }}
     </div>
     {% endif %}
 
     {% if feeds.length > 0 %}
-    <div class="feeds__list">
+    <div class="ms-feeds__list">
       {% for feed in feeds %}
-      <div class="feeds__item{% if feed.status == 'error' %} feeds__item--error{% endif %}">
-        <div class="feeds__info">
+      <div class="ms-feeds__item{% if feed.status == 'error' %} ms-feeds__item--error{% endif %}">
+        <div class="ms-feeds__info">
           {% if feed.photo %}
           <img src="{{ feed.photo }}"
                alt=""
-               class="feeds__photo"
+               class="ms-feeds__photo"
                width="48"
                height="48"
-               loading="lazy"
-               onerror="this.style.display='none'">
+               loading="lazy">
           {% endif %}
-          <div class="feeds__details">
-            <span class="feeds__name">
+          <div class="ms-feeds__details">
+            <span class="ms-feeds__name">
               {{ feed.title or feed.url }}
               {% if feed.feedType %}
               <span class="badge badge--offset badge--small" title="Feed format">{{ feed.feedType | upper }}</span>
@@ -42,21 +41,21 @@
               <span class="badge badge--green">Active</span>
               {% endif %}
             </span>
-            <a href="{{ feed.url }}" class="feeds__url" target="_blank" rel="noopener">
+            <a href="{{ feed.url }}" class="ms-feeds__url" target="_blank" rel="noopener">
               {{ feed.url | replace("https://", "") | replace("http://", "") }}
             </a>
             {% if feed.lastError %}
-            <span class="feeds__error">{{ feed.lastError }}</span>
+            <span class="ms-feeds__error">{{ feed.lastError }}</span>
             {% endif %}
             {% if feed.consecutiveErrors > 0 %}
-            <span class="feeds__error-count">{{ feed.consecutiveErrors }} consecutive errors</span>
+            <span class="ms-feeds__error-count">{{ feed.consecutiveErrors }} consecutive errors</span>
             {% endif %}
             {% if feed.lastSuccessAt %}
-            <span class="feeds__meta">Last success: {{ feed.lastSuccessAt }}</span>
+            <span class="ms-feeds__meta">Last success: {{ feed.lastSuccessAt }}</span>
             {% endif %}
           </div>
         </div>
-        <div class="feeds__actions">
+        <div class="ms-feeds__actions">
           <a href="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/edit"
              class="button button--secondary button--small"
              title="Edit feed URL">
@@ -83,15 +82,15 @@
       {% endfor %}
     </div>
     {% else %}
-    <div class="reader__empty">
+    <div class="ms-reader__empty">
       {{ icon("syndicate") }}
       <p>{{ __("microsub.feeds.empty") }}</p>
     </div>
     {% endif %}
 
-    <div class="feeds__add">
+    <div class="ms-feeds__add">
       <h3>{{ __("microsub.feeds.follow") }}</h3>
-      <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds" class="feeds__form">
+      <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds" class="ms-feeds__form">
         {{ input({
           id: "url",
           name: "url",
