@@ -53,14 +53,17 @@
     {# Author #}
     {% if item.author %}
     <div class="ms-item-card__author">
-      {% if item.author.photo %}
-      <img src="{{ item.author.photo }}"
-           alt=""
-           class="ms-item-card__author-photo"
-           width="40"
-           height="40"
-           loading="lazy">
-      {% endif %}
+      <div class="ms-item-card__avatar-wrap" data-avatar-fallback>
+        {% if item.author.photo %}
+        <img src="{{ item.author.photo }}"
+             alt=""
+             class="ms-item-card__author-photo"
+             width="40"
+             height="40"
+             loading="lazy">
+        {% endif %}
+        <span class="ms-item-card__author-photo ms-item-card__author-photo--default" aria-hidden="true">{{ item.author.name[0] | upper if item.author.name else "?" }}</span>
+      </div>
       <div class="ms-item-card__author-info">
         <span class="ms-item-card__author-name">{{ item.author.name or "Unknown" }}</span>
         {% if item._source %}

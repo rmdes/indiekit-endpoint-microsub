@@ -1,9 +1,12 @@
 {# Author display #}
 {% if author %}
 <div class="author">
-  {% if author.photo %}
-  <img src="{{ author.photo }}" alt="" class="author__photo" width="48" height="48" loading="lazy">
-  {% endif %}
+  <div class="ms-item__avatar-wrap" data-avatar-fallback>
+    {% if author.photo %}
+    <img src="{{ author.photo }}" alt="" class="author__photo" width="48" height="48" loading="lazy">
+    {% endif %}
+    <span class="ms-item__author-photo ms-item__author-photo--default" aria-hidden="true">{{ author.name[0] | upper if author.name else "?" }}</span>
+  </div>
   <div class="author__info">
     <span class="author__name">
       {% if author.url %}

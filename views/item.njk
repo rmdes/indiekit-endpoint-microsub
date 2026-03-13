@@ -8,14 +8,17 @@
 
     {% if item.author %}
     <header class="ms-item__author">
-      {% if item.author.photo %}
-      <img src="{{ item.author.photo }}"
-           alt=""
-           class="ms-item__author-photo"
-           width="48"
-           height="48"
-           loading="lazy">
-      {% endif %}
+      <div class="ms-item__avatar-wrap" data-avatar-fallback>
+        {% if item.author.photo %}
+        <img src="{{ item.author.photo }}"
+             alt=""
+             class="ms-item__author-photo"
+             width="48"
+             height="48"
+             loading="lazy">
+        {% endif %}
+        <span class="ms-item__author-photo ms-item__author-photo--default" aria-hidden="true">{{ item.author.name[0] | upper if item.author.name else "?" }}</span>
+      </div>
       <div class="ms-item__author-info">
         <span class="ms-item__author-name">
           {% if item.author.url %}

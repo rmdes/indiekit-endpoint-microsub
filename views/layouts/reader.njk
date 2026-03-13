@@ -9,4 +9,6 @@
 {% include "partials/breadcrumbs.njk" %}
 {% include "partials/view-switcher.njk" %}
 {% block reader %}{% endblock %}
+{# Avatar fallback — remove broken images to reveal initials fallback underneath #}
+<script>document.addEventListener("error",function(e){var t=e.target;if(t.tagName==="IMG"&&t.closest("[data-avatar-fallback]"))t.remove()},true)</script>
 {% endblock %}

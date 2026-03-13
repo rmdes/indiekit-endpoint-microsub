@@ -154,12 +154,37 @@
   margin-bottom: var(--space-s);
 }
 
+.ms-item-card__avatar-wrap {
+  flex-shrink: 0;
+  height: 40px;
+  position: relative;
+  width: 40px;
+}
+
+.ms-item-card__avatar-wrap > img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
 .ms-item-card__author-photo {
   border: var(--border-width-thin) solid var(--color-offset);
   border-radius: 50%;
-  flex-shrink: 0;
   height: 40px;
   object-fit: cover;
+  width: 40px;
+}
+
+.ms-item-card__author-photo--default {
+  align-items: center;
+  background: var(--color-offset);
+  border-radius: 50%;
+  color: var(--color-on-offset);
+  display: flex;
+  font-size: var(--font-size-s);
+  font-weight: 600;
+  height: 40px;
+  justify-content: center;
   width: 40px;
 }
 
@@ -496,10 +521,36 @@
   margin-bottom: var(--space-m);
 }
 
+.ms-item__avatar-wrap {
+  flex-shrink: 0;
+  height: 48px;
+  position: relative;
+  width: 48px;
+}
+
+.ms-item__avatar-wrap > img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
 .ms-item__author-photo {
   border-radius: 50%;
   height: 48px;
   object-fit: cover;
+  width: 48px;
+}
+
+.ms-item__author-photo--default {
+  align-items: center;
+  background: var(--color-offset);
+  border-radius: 50%;
+  color: var(--color-on-offset);
+  display: flex;
+  font-size: var(--font-size-m);
+  font-weight: 600;
+  height: 48px;
+  justify-content: center;
   width: 48px;
 }
 
@@ -1010,10 +1061,35 @@
   gap: var(--space-m);
 }
 
+.ms-actor-profile__avatar-wrap {
+  flex-shrink: 0;
+  height: 80px;
+  position: relative;
+  width: 80px;
+}
+
+.ms-actor-profile__avatar-wrap > img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
 .ms-actor-profile__avatar {
   border-radius: 50%;
-  flex-shrink: 0;
   object-fit: cover;
+}
+
+.ms-actor-profile__avatar--default {
+  align-items: center;
+  background: var(--color-offset);
+  border-radius: 50%;
+  color: var(--color-on-offset);
+  display: flex;
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  height: 80px;
+  justify-content: center;
+  width: 80px;
 }
 
 .ms-actor-profile__info {
