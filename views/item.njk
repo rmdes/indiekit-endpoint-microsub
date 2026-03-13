@@ -130,7 +130,7 @@
     <footer class="ms-item__actions">
       {% if item.url %}
       <a href="{{ item.url }}" class="button button--secondary button--small" target="_blank" rel="noopener">
-        {{ icon("external") }} {{ __("microsub.item.viewOriginal") }}
+        {{ icon("syndicate") }} {{ __("microsub.item.viewOriginal") }}
       </a>
       {% endif %}
       <a href="{{ baseUrl }}/compose?reply={{ item.url | urlencode }}" class="button button--secondary button--small">
@@ -150,7 +150,7 @@
               class="button button--secondary button--small ms-item__mark-read"
               data-item-id="{{ item._id }}"
               data-channel="{{ channel.uid }}">
-        {{ icon("checkboxChecked") }} {{ __("microsub.timeline.markRead") }}
+        {{ icon("tick") }} {{ __("microsub.timeline.markRead") }}
       </button>
       {% endif %}
     </footer>

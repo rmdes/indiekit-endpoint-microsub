@@ -38,14 +38,14 @@
       </div>
       <div class="ms-actor-profile__actions">
         <a href="{{ actor.url }}" class="button button--secondary button--small" target="_blank" rel="noopener">
-          {{ icon("external") }} View profile
+          {{ icon("syndicate") }} View profile
         </a>
         {% if canFollow %}
           {% if isFollowing %}
           <form action="{{ baseUrl }}/actor/unfollow" method="POST" style="display: inline;">
             <input type="hidden" name="actorUrl" value="{{ actorUrl }}">
             <button type="submit" class="button button--secondary button--small">
-              {{ icon("checkboxChecked") }} Following
+              {{ icon("tick") }} Following
             </button>
           </form>
           {% else %}
@@ -152,7 +152,7 @@
         {# Actions #}
         <div class="ms-item-actions">
           <a href="{{ item.url }}" class="ms-item-actions__button" target="_blank" rel="noopener" title="View original">
-            {{ icon("external") }}
+            {{ icon("syndicate") }}
           </a>
           <a href="{{ baseUrl }}/compose?reply={{ item.url | urlencode }}" class="ms-item-actions__button" title="Reply">
             {{ icon("reply") }}

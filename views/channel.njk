@@ -10,7 +10,7 @@
           <input type="hidden" name="channel" value="{{ channel.uid }}">
           <input type="hidden" name="entry" value="last-read-entry">
           <button type="submit" class="button button--secondary button--small">
-            {{ icon("checkboxChecked") }} {{ __("microsub.reader.markAllRead") }}
+            {{ icon("tick") }} {{ __("microsub.reader.markAllRead") }}
           </button>
         </form>
         {% endif %}
@@ -58,7 +58,7 @@
     {% else %}
     <div class="ms-reader__empty">
       {% if readCount > 0 and not showRead %}
-      {{ icon("checkboxChecked") }}
+      {{ icon("tick") }}
       <p>{{ __("microsub.reader.allRead") }}</p>
       <a href="{{ baseUrl }}/channels/{{ channel.uid }}?showRead=true" class="button button--secondary">
         {{ icon("show") }} {{ __("microsub.reader.showRead", { count: readCount }) }}

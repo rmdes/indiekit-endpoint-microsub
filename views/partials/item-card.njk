@@ -158,7 +158,7 @@
     {% endif %}
     {% if item.url %}
     <a href="{{ item.url }}" class="ms-item-actions__button" target="_blank" rel="noopener" title="View original">
-      {{ icon("external") }}
+      {{ icon("syndicate") }}
       <span class="-!-visually-hidden">Original</span>
     </a>
     {% endif %}
@@ -188,7 +188,7 @@
               {% if item._channelUid %}data-channel-uid="{{ item._channelUid }}"{% endif %}
               {% if item._channelId %}data-channel-id="{{ item._channelId }}"{% endif %}
               title="Mark as read">
-        {{ icon("checkboxChecked") }}
+        {{ icon("tick") }}
         <span class="-!-visually-hidden">Mark read</span>
       </button>
       <button type="button"
@@ -213,7 +213,7 @@
             {% if item._channelUid %}data-channel-uid="{{ item._channelUid }}"{% endif %}
             {% if item._channelId %}data-channel-id="{{ item._channelId }}"{% endif %}
             title="Mark as read">
-      {{ icon("checkboxChecked") }}
+      {{ icon("tick") }}
       <span class="-!-visually-hidden">Mark read</span>
     </button>
     {% endif %}
