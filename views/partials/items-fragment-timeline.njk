@@ -1,0 +1,11 @@
+{# Layout-less fragment for AJAX infinite scroll in timeline view #}
+{% for item in items %}
+<div class="ms-timeline-view__item">
+  {% if item._channelName %}
+  <span class="ms-timeline-view__channel-badge" style="background: {{ item._channelColor or '#888' }}">
+    {{ item._channelName }}
+  </span>
+  {% endif %}
+  {% include "partials/item-card.njk" %}
+</div>
+{% endfor %}
