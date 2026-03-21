@@ -92,6 +92,7 @@ export default class MicrosubEndpoint {
     readerRouter.get("/channels", readerController.channels);
     readerRouter.get("/channels/new", readerController.newChannel);
     readerRouter.post("/channels/new", readerController.createChannel);
+    readerRouter.get("/channels/:uid/html", readerController.channelHtml);
     readerRouter.get("/channels/:uid", readerController.channel);
     readerRouter.get("/channels/:uid/settings", readerController.settings);
     readerRouter.post(
@@ -135,7 +136,9 @@ export default class MicrosubEndpoint {
     readerRouter.post("/actor/follow", readerController.followActorAction);
     readerRouter.post("/actor/unfollow", readerController.unfollowActorAction);
     readerRouter.post("/api/mark-read", readerController.markAllRead);
+    readerRouter.post("/api/mark-view-read", readerController.markViewRead);
     readerRouter.get("/opml", opmlController.exportOpml);
+    readerRouter.get("/timeline/html", readerController.timelineHtml);
     readerRouter.get("/timeline", readerController.timeline);
     readerRouter.get("/deck", readerController.deck);
     readerRouter.get("/deck/settings", readerController.deckSettings);

@@ -42,21 +42,20 @@
       {% endfor %}
     </div>
 
-    {% if paging %}
-    <nav class="ms-timeline__paging" aria-label="Pagination">
-      {% if paging.before %}
-      <a href="?before={{ paging.before }}" class="button button--secondary">
-        {{ __("microsub.reader.newer") }}
-      </a>
-      {% else %}
-      <span></span>
-      {% endif %}
-      {% if paging.after %}
-      <a href="?after={{ paging.after }}" class="button button--secondary">
+    {% if paging and paging.after %}
+    <div class="ms-timeline__loader" id="timeline-loader"
+         data-api-url="{{ baseUrl }}/timeline/html{% if excludeIds and excludeIds.length > 0 %}?{% for id in excludeIds %}exclude={{ id }}{% if not loop.last %}&{% endif %}{% endfor %}{% endif %}"
+         data-cursor="{{ paging.after }}">
+      <div class="ms-timeline__spinner" style="display:none" aria-label="Loading more items">
+        <span class="spinner"></span>
+      </div>
+      <a href="?after={{ paging.after }}" class="button button--secondary ms-timeline__load-more">
         {{ __("microsub.reader.older") }}
       </a>
-      {% endif %}
-    </nav>
+      <p class="ms-timeline__end" style="display:none">
+        {{ __("microsub.reader.allRead") }}
+      </p>
+    </div>
     {% endif %}
 
     {% else %}
@@ -266,6 +265,73 @@
           button.disabled = false;
         }
       });
+
+      // === Infinite scroll ===
+      const loader = document.getElementById('timeline-loader');
+      if (loader && timeline) {
+        const spinner = loader.querySelector('.ms-timeline__spinner');
+        const loadMoreLink = loader.querySelector('.ms-timeline__load-more');
+        const endMessage = loader.querySelector('.ms-timeline__end');
+        let cursor = loader.dataset.cursor;
+        let loading = false;
+        let hasMore = true;
+        const apiUrl = loader.dataset.apiUrl;
+
+        async function loadMore() {
+          if (loading || !hasMore) return;
+          loading = true;
+          if (spinner) spinner.style.display = '';
+          if (loadMoreLink) loadMoreLink.style.display = 'none';
+
+          try {
+            const sep = apiUrl.includes('?') ? '&' : '?';
+            const response = await fetch(`${apiUrl}${sep}after=${encodeURIComponent(cursor)}`, {
+              credentials: 'same-origin'
+            });
+
+            if (!response.ok) throw new Error('Failed to load');
+
+            const data = await response.json();
+
+            if (data.html && data.count > 0) {
+              timeline.insertAdjacentHTML('beforeend', data.html);
+            }
+
+            if (data.paging?.after) {
+              cursor = data.paging.after;
+              if (loadMoreLink) {
+                loadMoreLink.href = `?after=${cursor}`;
+                loadMoreLink.style.display = '';
+              }
+            } else {
+              hasMore = false;
+              if (loadMoreLink) loadMoreLink.style.display = 'none';
+              if (endMessage) endMessage.style.display = '';
+            }
+          } catch (error) {
+            console.error('Infinite scroll error:', error);
+            hasMore = false;
+            if (loadMoreLink) loadMoreLink.style.display = '';
+          } finally {
+            loading = false;
+            if (spinner) spinner.style.display = 'none';
+          }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting && hasMore && !loading) {
+            loadMore();
+          }
+        }, { rootMargin: '200px' });
+        observer.observe(loader);
+
+        if (loadMoreLink) {
+          loadMoreLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loadMore();
+          });
+        }
+      }
     }
   </script>
 {% endblock %}

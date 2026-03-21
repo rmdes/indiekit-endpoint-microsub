@@ -13,6 +13,12 @@
             {{ icon("tick") }} {{ __("microsub.reader.markAllRead") }}
           </button>
         </form>
+        <button type="button"
+                class="button button--secondary button--small js-mark-view-read"
+                data-channel="{{ channel.uid }}"
+                style="display:none">
+          {{ icon("tick") }} {{ __("microsub.reader.markViewRead") }}
+        </button>
         {% endif %}
         {% if showRead %}
         <a href="{{ baseUrl }}/channels/{{ channel.uid }}" class="button button--secondary button--small">
@@ -33,27 +39,41 @@
     </header>
 
     {% if items.length > 0 %}
+    <form method="POST" action="{{ baseUrl }}/api/mark-view-read" id="mark-view-form">
+      <input type="hidden" name="channel" value="{{ channel.uid }}">
+      {% for item in items %}
+        {% if not item._is_read %}
+        <input type="hidden" name="entry" value="{{ item._id }}">
+        {% endif %}
+      {% endfor %}
+      <noscript>
+        <button type="submit" class="button button--secondary button--small">
+          {{ icon("tick") }} {{ __("microsub.reader.markViewRead") }}
+        </button>
+      </noscript>
+    </form>
     <div class="ms-timeline" id="timeline" data-channel="{{ channel.uid }}">
       {% for item in items %}
       {% include "partials/item-card.njk" %}
       {% endfor %}
     </div>
 
-    {% if paging %}
-    <nav class="ms-timeline__paging" aria-label="Pagination">
-      {% if paging.before %}
-      <a href="?before={{ paging.before }}{% if showRead %}&showRead=true{% endif %}" class="button button--secondary">
-        {{ icon("previous") }} {{ __("microsub.reader.newer") }}
+    {# Infinite scroll sentinel — JS upgrades the fallback link #}
+    {% if paging and paging.after %}
+    <div class="ms-timeline__loader" id="timeline-loader"
+         data-api-url="{{ baseUrl }}/channels/{{ channel.uid }}/html"
+         data-cursor="{{ paging.after }}"
+         data-show-read="{% if showRead %}true{% else %}false{% endif %}">
+      <div class="ms-timeline__spinner" style="display:none" aria-label="Loading more items">
+        <span class="spinner"></span>
+      </div>
+      <a href="?after={{ paging.after }}{% if showRead %}&showRead=true{% endif %}" class="button button--secondary ms-timeline__load-more">
+        {{ __("microsub.reader.older") }}
       </a>
-      {% else %}
-      <span></span>
-      {% endif %}
-      {% if paging.after %}
-      <a href="?after={{ paging.after }}{% if showRead %}&showRead=true{% endif %}" class="button button--secondary">
-        {{ __("microsub.reader.older") }} {{ icon("next") }}
-      </a>
-      {% endif %}
-    </nav>
+      <p class="ms-timeline__end" style="display:none">
+        {{ __("microsub.reader.allRead") }}
+      </p>
+    </div>
     {% endif %}
     {% else %}
     <div class="ms-reader__empty">
@@ -282,6 +302,137 @@
           }
         } catch {
           button.disabled = false;
+        }
+      });
+    }
+
+    // === Infinite scroll ===
+    const loader = document.getElementById('timeline-loader');
+    if (loader && timeline) {
+      const spinner = loader.querySelector('.ms-timeline__spinner');
+      const loadMoreLink = loader.querySelector('.ms-timeline__load-more');
+      const endMessage = loader.querySelector('.ms-timeline__end');
+      let cursor = loader.dataset.cursor;
+      let loading = false;
+      let hasMore = true;
+      const apiUrl = loader.dataset.apiUrl;
+      const showReadParam = loader.dataset.showRead;
+
+      async function loadMore() {
+        if (loading || !hasMore) return;
+        loading = true;
+        if (spinner) spinner.style.display = '';
+        if (loadMoreLink) loadMoreLink.style.display = 'none';
+
+        try {
+          const params = new URLSearchParams({ after: cursor });
+          if (showReadParam === 'true') params.append('showRead', 'true');
+
+          const response = await fetch(`${apiUrl}?${params}`, {
+            credentials: 'same-origin'
+          });
+
+          if (!response.ok) throw new Error('Failed to load');
+
+          const data = await response.json();
+
+          if (data.html && data.count > 0) {
+            timeline.insertAdjacentHTML('beforeend', data.html);
+          }
+
+          if (data.paging?.after) {
+            cursor = data.paging.after;
+            if (loadMoreLink) {
+              loadMoreLink.href = `?after=${cursor}${showReadParam === 'true' ? '&showRead=true' : ''}`;
+              loadMoreLink.style.display = '';
+            }
+          } else {
+            hasMore = false;
+            if (loadMoreLink) loadMoreLink.style.display = 'none';
+            if (endMessage) endMessage.style.display = '';
+          }
+        } catch (error) {
+          console.error('Infinite scroll error:', error);
+          hasMore = false;
+          if (loadMoreLink) loadMoreLink.style.display = '';
+        } finally {
+          loading = false;
+          if (spinner) spinner.style.display = 'none';
+        }
+      }
+
+      // IntersectionObserver auto-loads when sentinel is visible
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          loadMore();
+        }
+      }, { rootMargin: '200px' });
+      observer.observe(loader);
+
+      // Click handler for fallback link
+      if (loadMoreLink) {
+        loadMoreLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          loadMore();
+        });
+      }
+
+      // Expose loadMore for mark-view-as-read to trigger
+      window.__microsubLoadMore = loadMore;
+    }
+
+    // === Mark view as read button ===
+    const markViewBtn = document.querySelector('.js-mark-view-read');
+    if (markViewBtn && timeline) {
+      markViewBtn.style.display = '';
+
+      markViewBtn.addEventListener('click', async () => {
+        const unreadCards = timeline.querySelectorAll('.ms-item-card:not(.ms-item-card--read)');
+        const itemIds = [...unreadCards].map((card) => card.dataset.itemId).filter(Boolean);
+
+        if (itemIds.length === 0) return;
+
+        markViewBtn.disabled = true;
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'timeline');
+        formData.append('method', 'mark_read');
+        formData.append('channel', markViewBtn.dataset.channel);
+        for (const id of itemIds) {
+          formData.append('entry', id);
+        }
+
+        try {
+          const response = await fetch(microsubApiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData.toString(),
+            credentials: 'same-origin'
+          });
+
+          if (response.ok) {
+            for (const card of unreadCards) {
+              card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+              card.style.opacity = '0';
+              card.style.transform = 'translateX(-20px)';
+            }
+            setTimeout(() => {
+              for (const card of [...unreadCards]) card.remove();
+              markViewBtn.disabled = false;
+
+              // Trigger infinite scroll to load next batch
+              if (typeof window.__microsubLoadMore === 'function') {
+                window.__microsubLoadMore();
+              } else if (timeline.querySelectorAll('.ms-item-card').length === 0) {
+                location.reload();
+              }
+            }, 300);
+          } else {
+            markViewBtn.disabled = false;
+          }
+        } catch (error) {
+          console.error('Error marking view as read:', error);
+          markViewBtn.disabled = false;
         }
       });
     }
