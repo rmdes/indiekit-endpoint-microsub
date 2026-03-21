@@ -99,6 +99,11 @@
       "feedNotFound": "Flöde hittades inte",
       "invalidUrl": "Ogiltig URL",
       "invalidAction": "Ogiltig åtgärd"
+    },
+    "views": {
+      "channels": "Kanaler",
+      "deck": "Deck",
+      "timeline": "Tidslinje"
     }
   }
 }

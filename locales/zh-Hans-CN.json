@@ -99,6 +99,11 @@
       "feedNotFound": "未找到订阅源",
       "invalidUrl": "无效的 URL",
       "invalidAction": "无效的操作"
+    },
+    "views": {
+      "channels": "频道",
+      "deck": "面板",
+      "timeline": "时间线"
     }
   }
 }

@@ -99,6 +99,11 @@
       "feedNotFound": "फीड नहीं मिला",
       "invalidUrl": "अमान्य URL",
       "invalidAction": "अमान्य क्रिया"
+    },
+    "views": {
+      "channels": "चैनल",
+      "deck": "डेक",
+      "timeline": "टाइमलाइन"
     }
   }
 }

@@ -99,6 +99,11 @@
       "feedNotFound": "Довод није пронађен",
       "invalidUrl": "Неважећи URL",
       "invalidAction": "Неважећа радња"
+    },
+    "views": {
+      "channels": "Канали",
+      "deck": "Deck",
+      "timeline": "Временска линија"
     }
   }
 }

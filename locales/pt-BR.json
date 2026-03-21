@@ -99,6 +99,11 @@
       "feedNotFound": "Feed não encontrado",
       "invalidUrl": "URL inválida",
       "invalidAction": "Ação inválida"
+    },
+    "views": {
+      "channels": "Canais",
+      "deck": "Deck",
+      "timeline": "Linha do tempo"
     }
   }
 }

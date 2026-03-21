@@ -99,6 +99,11 @@
       "feedNotFound": "Umpan tidak ditemukan",
       "invalidUrl": "URL tidak valid",
       "invalidAction": "Tindakan tidak valid"
+    },
+    "views": {
+      "channels": "Kanal",
+      "deck": "Deck",
+      "timeline": "Lini masa"
     }
   }
 }

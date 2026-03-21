@@ -99,6 +99,11 @@
       "feedNotFound": "Nie znaleziono kanału RSS",
       "invalidUrl": "Nieprawidłowy URL",
       "invalidAction": "Nieprawidłowa akcja"
+    },
+    "views": {
+      "channels": "Kanały",
+      "deck": "Deck",
+      "timeline": "Oś czasu"
     }
   }
 }

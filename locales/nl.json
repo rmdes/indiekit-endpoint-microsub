@@ -99,6 +99,11 @@
       "feedNotFound": "Feed niet gevonden",
       "invalidUrl": "Ongeldige URL",
       "invalidAction": "Ongeldige actie"
+    },
+    "views": {
+      "channels": "Kanalen",
+      "deck": "Deck",
+      "timeline": "Tijdlijn"
     }
   }
 }

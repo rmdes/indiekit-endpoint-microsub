@@ -99,6 +99,11 @@
       "feedNotFound": "Flux introuvable",
       "invalidUrl": "URL invalide",
       "invalidAction": "Action invalide"
+    },
+    "views": {
+      "channels": "Chaînes",
+      "deck": "Deck",
+      "timeline": "Fil d'actualité"
     }
   }
 }
