@@ -381,10 +381,11 @@
       window.__microsubLoadMore = loadMore;
     }
 
-    // === Mark view as read button ===
+    // === Mark current view as read button ===
     const markViewBtn = document.querySelector('.js-mark-view-read');
     if (markViewBtn && timeline) {
       markViewBtn.style.display = '';
+      const markViewApiUrl = '{{ baseUrl }}'.replace(/\/reader$/, '');
 
       markViewBtn.addEventListener('click', async () => {
         const unreadCards = timeline.querySelectorAll('.ms-item-card:not(.ms-item-card--read)');
@@ -403,7 +404,7 @@
         }
 
         try {
-          const response = await fetch(microsubApiUrl, {
+          const response = await fetch(markViewApiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: formData.toString(),
@@ -431,7 +432,7 @@
             markViewBtn.disabled = false;
           }
         } catch (error) {
-          console.error('Error marking view as read:', error);
+          console.error('Error marking current view as read:', error);
           markViewBtn.disabled = false;
         }
       });
