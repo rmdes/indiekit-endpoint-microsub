@@ -6,16 +6,17 @@ import rateLimit from "express-rate-limit";
 
 import { microsubController } from "./lib/controllers/microsub.js";
 import { opmlController } from "./lib/controllers/opml.js";
-import { readerController } from "./lib/controllers/reader.js";
+import { readerController } from "./lib/controllers/reader/index.js";
+import { asyncHandler } from "./lib/utils/async-handler.js";
 import { handleMediaProxy } from "./lib/media/proxy.js";
 import { csrfToken, csrfValidate } from "./lib/utils/csrf.js";
 import { startScheduler, stopScheduler } from "./lib/polling/scheduler.js";
 import { ensureActivityPubChannel } from "./lib/storage/channels.js";
+import { createIndexes } from "./lib/storage/items.js";
 import {
   cleanupAllReadItems,
   cleanupStaleItems,
-  createIndexes,
-} from "./lib/storage/items.js";
+} from "./lib/storage/items-retention.js";
 import { webmentionReceiver } from "./lib/webmention/receiver.js";
 import { websubHandler } from "./lib/websub/handler.js";
 
@@ -87,61 +88,61 @@ export default class MicrosubEndpoint {
     readerRouter.use(csrfToken);
     readerRouter.use(csrfValidate);
 
-    readerRouter.get("/", readerController.index);
-    readerRouter.get("/channels", readerController.channels);
-    readerRouter.get("/channels/new", readerController.newChannel);
-    readerRouter.post("/channels/new", readerController.createChannel);
-    readerRouter.get("/channels/:uid/html", readerController.channelHtml);
-    readerRouter.get("/channels/:uid", readerController.channel);
-    readerRouter.get("/channels/:uid/settings", readerController.settings);
+    readerRouter.get("/", asyncHandler(readerController.index));
+    readerRouter.get("/channels", asyncHandler(readerController.channels));
+    readerRouter.get("/channels/new", asyncHandler(readerController.newChannel));
+    readerRouter.post("/channels/new", asyncHandler(readerController.createChannel));
+    readerRouter.get("/channels/:uid/html", asyncHandler(readerController.channelHtml));
+    readerRouter.get("/channels/:uid", asyncHandler(readerController.channel));
+    readerRouter.get("/channels/:uid/settings", asyncHandler(readerController.settings));
     readerRouter.post(
       "/channels/:uid/settings",
-      readerController.updateSettings,
+      asyncHandler(readerController.updateSettings),
     );
-    readerRouter.post("/channels/:uid/delete", readerController.deleteChannel);
-    readerRouter.get("/channels/:uid/feeds", readerController.feeds);
-    readerRouter.post("/channels/:uid/feeds", readerController.addFeed);
+    readerRouter.post("/channels/:uid/delete", asyncHandler(readerController.deleteChannel));
+    readerRouter.get("/channels/:uid/feeds", asyncHandler(readerController.feeds));
+    readerRouter.post("/channels/:uid/feeds", asyncHandler(readerController.addFeed));
     readerRouter.post(
       "/channels/:uid/feeds/remove",
-      readerController.removeFeed,
+      asyncHandler(readerController.removeFeed),
     );
     readerRouter.get(
       "/channels/:uid/feeds/:feedId",
-      readerController.feedDetails,
+      asyncHandler(readerController.feedDetails),
     );
     readerRouter.get(
       "/channels/:uid/feeds/:feedId/edit",
-      readerController.editFeedForm,
+      asyncHandler(readerController.editFeedForm),
     );
     readerRouter.post(
       "/channels/:uid/feeds/:feedId/edit",
-      readerController.updateFeedUrl,
+      asyncHandler(readerController.updateFeedUrl),
     );
     readerRouter.post(
       "/channels/:uid/feeds/:feedId/rediscover",
-      readerController.rediscoverFeed,
+      asyncHandler(readerController.rediscoverFeed),
     );
     readerRouter.post(
       "/channels/:uid/feeds/:feedId/refresh",
-      readerController.refreshFeed,
+      asyncHandler(readerController.refreshFeed),
     );
-    readerRouter.get("/item/:id", readerController.item);
-    readerRouter.get("/compose", readerController.compose);
-    readerRouter.post("/compose", readerController.submitCompose);
-    readerRouter.get("/search", readerController.searchPage);
-    readerRouter.post("/search", readerController.searchFeeds);
-    readerRouter.post("/subscribe", readerController.subscribe);
-    readerRouter.get("/actor", readerController.actorProfile);
-    readerRouter.post("/actor/follow", readerController.followActorAction);
-    readerRouter.post("/actor/unfollow", readerController.unfollowActorAction);
-    readerRouter.post("/api/mark-read", readerController.markAllRead);
-    readerRouter.post("/api/mark-view-read", readerController.markViewRead);
+    readerRouter.get("/item/:id", asyncHandler(readerController.item));
+    readerRouter.get("/compose", asyncHandler(readerController.compose));
+    readerRouter.post("/compose", asyncHandler(readerController.submitCompose));
+    readerRouter.get("/search", asyncHandler(readerController.searchPage));
+    readerRouter.post("/search", asyncHandler(readerController.searchFeeds));
+    readerRouter.post("/subscribe", asyncHandler(readerController.subscribe));
+    readerRouter.get("/actor", asyncHandler(readerController.actorProfile));
+    readerRouter.post("/actor/follow", asyncHandler(readerController.followActorAction));
+    readerRouter.post("/actor/unfollow", asyncHandler(readerController.unfollowActorAction));
+    readerRouter.post("/api/mark-read", asyncHandler(readerController.markAllRead));
+    readerRouter.post("/api/mark-view-read", asyncHandler(readerController.markViewRead));
     readerRouter.get("/opml", opmlController.exportOpml);
-    readerRouter.get("/timeline/html", readerController.timelineHtml);
-    readerRouter.get("/timeline", readerController.timeline);
-    readerRouter.get("/deck", readerController.deck);
-    readerRouter.get("/deck/settings", readerController.deckSettings);
-    readerRouter.post("/deck/settings", readerController.saveDeckSettings);
+    readerRouter.get("/timeline/html", asyncHandler(readerController.timelineHtml));
+    readerRouter.get("/timeline", asyncHandler(readerController.timeline));
+    readerRouter.get("/deck", asyncHandler(readerController.deck));
+    readerRouter.get("/deck/settings", asyncHandler(readerController.deckSettings));
+    readerRouter.post("/deck/settings", asyncHandler(readerController.saveDeckSettings));
     router.use("/reader", readerRouter);
 
     return router;

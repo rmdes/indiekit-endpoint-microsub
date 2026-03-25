@@ -5,6 +5,8 @@
       "empty": "No items to display",
       "markAllRead": "Mark all as read",
       "markViewRead": "Mark current view as read",
+      "filterChannels": "Filter channels",
+      "apply": "Apply",
       "showRead": "Show read ({{count}})",
       "hideRead": "Hide read items",
       "allRead": "All caught up!",
