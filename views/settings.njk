@@ -9,6 +9,7 @@
     <h2>{{ __("microsub.settings.title", { channel: channel.name }) }}</h2>
 
     <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/settings">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ checkboxes({
         name: "excludeTypes",
         values: channel.settings.excludeTypes,
@@ -64,6 +65,7 @@
       <h3>{{ __("microsub.settings.dangerZone") }}</h3>
       <p class="hint">{{ __("microsub.settings.deleteWarning") }}</p>
       <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/delete" onsubmit="return confirm('{{ __("microsub.settings.deleteConfirm") }}');">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ button({
           text: __("microsub.settings.delete"),
           classes: "button--danger"

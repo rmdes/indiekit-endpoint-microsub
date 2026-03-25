@@ -46,6 +46,7 @@
         {% if canFollow %}
           {% if isFollowing %}
           <form action="{{ baseUrl }}/actor/unfollow" method="POST" style="display: inline;">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             <input type="hidden" name="actorUrl" value="{{ actorUrl }}">
             <button type="submit" class="button button--secondary button--small">
               {{ icon("tick") }} Following
@@ -53,6 +54,7 @@
           </form>
           {% else %}
           <form action="{{ baseUrl }}/actor/follow" method="POST" style="display: inline;">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             <input type="hidden" name="actorUrl" value="{{ actorUrl }}">
             <input type="hidden" name="actorName" value="{{ actor.name }}">
             <button type="submit" class="button button--primary button--small">

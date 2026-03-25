@@ -10,6 +10,7 @@
     </header>
 
     <form action="{{ baseUrl }}/deck/settings" method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       <p>Select which channels appear as columns in your deck, and their order.</p>
 
       <div class="ms-deck-settings__channels">

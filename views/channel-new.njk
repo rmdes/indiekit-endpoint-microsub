@@ -9,6 +9,7 @@
     <h2>{{ __("microsub.channels.new") }}</h2>
 
     <form method="post" action="{{ baseUrl }}/channels/new">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ input({
         id: "name",
         name: "name",

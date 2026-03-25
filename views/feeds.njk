@@ -62,16 +62,19 @@
             {{ icon("updatePost") }}
           </a>
           <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/rediscover" style="display:inline;">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             <button type="submit" class="button button--secondary button--small" title="Rediscover feed">
               {{ icon("syndicate") }}
             </button>
           </form>
           <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/refresh" style="display:inline;">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             <button type="submit" class="button button--secondary button--small" title="Refresh now">
               {{ icon("repost") }}
             </button>
           </form>
           <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/remove" style="display:inline;">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             <input type="hidden" name="url" value="{{ feed.url }}">
             <button type="submit" class="button button--warning button--small" title="Unfollow">
               {{ icon("delete") }}
@@ -91,6 +94,7 @@
     <div class="ms-feeds__add">
       <h3>{{ __("microsub.feeds.follow") }}</h3>
       <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds" class="ms-feeds__form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ input({
           id: "url",
           name: "url",

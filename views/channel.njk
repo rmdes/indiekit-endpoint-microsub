@@ -7,6 +7,7 @@
       <div class="ms-channel__actions">
         {% if not showRead and items.length > 0 %}
         <form action="{{ baseUrl }}/api/mark-read" method="POST" style="display: inline;">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           <input type="hidden" name="channel" value="{{ channel.uid }}">
           <input type="hidden" name="entry" value="last-read-entry">
           <button type="submit" class="button button--secondary button--small">
@@ -40,6 +41,7 @@
 
     {% if items.length > 0 %}
     <form method="POST" action="{{ baseUrl }}/api/mark-view-read" id="mark-view-form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       <input type="hidden" name="channel" value="{{ channel.uid }}">
       {% for item in items %}
         {% if not item._is_read %}
@@ -95,6 +97,9 @@
   </div>
 
   <script type="module">
+    // CSRF token for AJAX requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
     // Keyboard navigation (j/k for items, o to open)
     const timeline = document.getElementById('timeline');
     if (timeline) {
@@ -164,6 +169,7 @@
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
+              'X-CSRF-Token': csrfToken,
             },
             body: formData.toString(),
             credentials: 'same-origin'
@@ -233,7 +239,7 @@
 
           const response = await fetch(microsubApiUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-Token': csrfToken },
             body: formData.toString(),
             credentials: 'same-origin'
           });
@@ -289,7 +295,7 @@
         try {
           const response = await fetch('/readlater/save', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
             body: JSON.stringify({ url, title: title || url, source: 'microsub' }),
             credentials: 'same-origin'
           });
@@ -406,7 +412,7 @@
         try {
           const response = await fetch(markViewApiUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-Token': csrfToken },
             body: formData.toString(),
             credentials: 'same-origin'
           });

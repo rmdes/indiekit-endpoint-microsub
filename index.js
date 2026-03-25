@@ -2,11 +2,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import express from "express";
+import rateLimit from "express-rate-limit";
 
 import { microsubController } from "./lib/controllers/microsub.js";
 import { opmlController } from "./lib/controllers/opml.js";
 import { readerController } from "./lib/controllers/reader.js";
 import { handleMediaProxy } from "./lib/media/proxy.js";
+import { csrfToken, csrfValidate } from "./lib/utils/csrf.js";
 import { startScheduler, stopScheduler } from "./lib/polling/scheduler.js";
 import { ensureActivityPubChannel } from "./lib/storage/channels.js";
 import {
@@ -77,17 +79,14 @@ export default class MicrosubEndpoint {
     router.get("/", microsubController.get);
     router.post("/", microsubController.post);
 
-    // WebSub callback endpoint
-    router.get("/websub/:id", websubHandler.verify);
-    router.post("/websub/:id", websubHandler.receive);
-
-    // Webmention receiving endpoint
-    router.post("/webmention", webmentionReceiver.receive);
-
-    // Media proxy endpoint
-    router.get("/media/:hash", handleMediaProxy);
+    // WebSub, webmention, and media proxy are registered in routesPublic only
+    // (they must be accessible without authentication)
 
     // Reader UI routes (mounted as sub-router for correct baseUrl)
+    // CSRF protection: generate token on all requests, validate on POST
+    readerRouter.use(csrfToken);
+    readerRouter.use(csrfValidate);
+
     readerRouter.get("/", readerController.index);
     readerRouter.get("/channels", readerController.channels);
     readerRouter.get("/channels/new", readerController.newChannel);
@@ -155,15 +154,20 @@ export default class MicrosubEndpoint {
   get routesPublic() {
     const publicRouter = express.Router();
 
+    // Rate limiters for public endpoints
+    const mediaLimiter = rateLimit({ windowMs: 60_000, max: 120, message: "Too many requests" });
+    const websubLimiter = rateLimit({ windowMs: 60_000, max: 30, message: "Too many requests" });
+    const webmentionLimiter = rateLimit({ windowMs: 60_000, max: 10, message: "Too many requests" });
+
     // WebSub verification must be public for hubs to verify
-    publicRouter.get("/websub/:id", websubHandler.verify);
-    publicRouter.post("/websub/:id", websubHandler.receive);
+    publicRouter.get("/websub/:id", websubLimiter, websubHandler.verify);
+    publicRouter.post("/websub/:id", websubLimiter, websubHandler.receive);
 
     // Webmention endpoint must be public
-    publicRouter.post("/webmention", webmentionReceiver.receive);
+    publicRouter.post("/webmention", webmentionLimiter, webmentionReceiver.receive);
 
     // Media proxy must be public for images to load
-    publicRouter.get("/media/:hash", handleMediaProxy);
+    publicRouter.get("/media/:hash", mediaLimiter, handleMediaProxy);
 
     return publicRouter;
   }
@@ -222,6 +226,13 @@ export default class MicrosubEndpoint {
       cleanupStaleItems(indiekit).catch((error) => {
         console.warn("[Microsub] Stale cleanup failed:", error.message);
       });
+
+      // Schedule daily stale cleanup (items accumulate between restarts)
+      setInterval(() => {
+        cleanupStaleItems(indiekit).catch((error) => {
+          console.warn("[Microsub] Scheduled stale cleanup failed:", error.message);
+        });
+      }, 24 * 60 * 60 * 1000);
     } else {
       console.warn(
         "[Microsub] Database not available at init, scheduler not started",

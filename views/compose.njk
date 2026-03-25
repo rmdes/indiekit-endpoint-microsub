@@ -45,6 +45,7 @@
     {% endif %}
 
     <form method="post" action="{{ baseUrl }}/compose">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {% if replyTo %}
       <input type="hidden" name="in-reply-to" value="{{ replyTo }}">
       {% endif %}

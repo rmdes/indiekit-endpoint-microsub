@@ -35,6 +35,7 @@
       </div>
 
       <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/edit" class="ms-feed-edit__form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ input({
           id: "url",
           name: "url",
@@ -64,6 +65,7 @@
         <h3>Other Actions</h3>
 
         <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/rediscover" class="ms-feed-edit__action">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           <p>Run feed discovery on the current URL to find the actual RSS/Atom feed.</p>
           {{ button({
             text: "Rediscover Feed",
@@ -72,6 +74,7 @@
         </form>
 
         <form method="post" action="{{ baseUrl }}/channels/{{ channel.uid }}/feeds/{{ feed._id }}/refresh" class="ms-feed-edit__action">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           <p>Force refresh this feed now.</p>
           {{ button({
             text: "Refresh Now",

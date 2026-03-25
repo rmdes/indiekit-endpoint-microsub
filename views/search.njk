@@ -9,6 +9,7 @@
     <h2>{{ __("microsub.search.title") }}</h2>
 
     <form method="post" action="{{ baseUrl }}/search" class="ms-search__form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ input({
         id: "query",
         name: "query",
@@ -60,6 +61,7 @@
           </div>
           {% if result.valid %}
           <form method="post" action="{{ baseUrl }}/subscribe" class="ms-search__subscribe">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             <input type="hidden" name="url" value="{{ result.url }}">
             <label for="channel-{{ loop.index }}" class="-!-visually-hidden">{{ __("microsub.channels.title") }}</label>
             <select name="channel" id="channel-{{ loop.index }}" class="select select--small">
