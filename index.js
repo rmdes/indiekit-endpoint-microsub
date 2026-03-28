@@ -205,7 +205,7 @@ export default class MicrosubEndpoint {
       console.info("[Microsub] Database available, starting scheduler");
       startScheduler(indiekit);
 
-      // Ensure system channels exist
+      // Ensure system channels exist (lightweight, always run)
       ensureActivityPubChannel(indiekit).catch((error) => {
         console.warn(
           "[Microsub] ActivityPub channel creation failed:",
@@ -213,20 +213,37 @@ export default class MicrosubEndpoint {
         );
       });
 
-      // Create indexes for optimal performance (runs in background)
+      // Create indexes (lightweight, always run)
       createIndexes(indiekit).catch((error) => {
         console.warn("[Microsub] Index creation failed:", error.message);
       });
 
-      // Cleanup old read items on startup
-      cleanupAllReadItems(indiekit).catch((error) => {
-        console.warn("[Microsub] Startup cleanup failed:", error.message);
-      });
+      // Defer heavy cleanup operations if background sync is deferred
+      const deferCleanup = process.env.INDIEKIT_DEFER_BACKGROUND_SYNC === "1";
+      const runCleanup = () => {
+        cleanupAllReadItems(indiekit).catch((error) => {
+          console.warn("[Microsub] Startup cleanup failed:", error.message);
+        });
+        cleanupStaleItems(indiekit).catch((error) => {
+          console.warn("[Microsub] Stale cleanup failed:", error.message);
+        });
+      };
 
-      // Delete stale items (stripped skeletons + unread older than 30 days)
-      cleanupStaleItems(indiekit).catch((error) => {
-        console.warn("[Microsub] Stale cleanup failed:", error.message);
-      });
+      if (deferCleanup) {
+        console.info("[Microsub] Cleanup deferred until after Eleventy build");
+        const cleanupCheck = setInterval(async () => {
+          try {
+            const fs = await import("node:fs");
+            if (fs.existsSync("/tmp/indiekit-ready-for-sync")) {
+              clearInterval(cleanupCheck);
+              console.info("[Microsub] Running deferred cleanup");
+              runCleanup();
+            }
+          } catch { /* not ready yet */ }
+        }, 10_000);
+      } else {
+        runCleanup();
+      }
 
       // Schedule daily stale cleanup (items accumulate between restarts)
       setInterval(() => {
