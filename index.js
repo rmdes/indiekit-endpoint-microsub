@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import express from "express";
 import rateLimit from "express-rate-limit";
+import { waitForReady } from "@rmdes/indiekit-startup-gate";
 
 import { microsubController } from "./lib/controllers/microsub.js";
 import { opmlController } from "./lib/controllers/opml.js";
@@ -202,38 +203,44 @@ export default class MicrosubEndpoint {
     // Start feed polling scheduler when server starts
     // This will be called after the server is ready
     if (indiekit.database) {
-      console.info("[Microsub] Database available, starting scheduler");
-      startScheduler(indiekit);
-
-      // Ensure system channels exist
-      ensureActivityPubChannel(indiekit).catch((error) => {
-        console.warn(
-          "[Microsub] ActivityPub channel creation failed:",
-          error.message,
-        );
-      });
-
-      // Create indexes for optimal performance (runs in background)
+      // Indexes are cheap and idempotent — create immediately
       createIndexes(indiekit).catch((error) => {
         console.warn("[Microsub] Index creation failed:", error.message);
       });
 
-      // Cleanup old read items on startup
-      cleanupAllReadItems(indiekit).catch((error) => {
-        console.warn("[Microsub] Startup cleanup failed:", error.message);
-      });
+      // Defer heavy tasks until host is ready
+      this._stopGate = waitForReady(
+        () => {
+          console.info("[Microsub] Starting scheduler and maintenance tasks");
+          startScheduler(indiekit);
 
-      // Delete stale items (stripped skeletons + unread older than 30 days)
-      cleanupStaleItems(indiekit).catch((error) => {
-        console.warn("[Microsub] Stale cleanup failed:", error.message);
-      });
+          // Ensure system channels exist
+          ensureActivityPubChannel(indiekit).catch((error) => {
+            console.warn(
+              "[Microsub] ActivityPub channel creation failed:",
+              error.message,
+            );
+          });
 
-      // Schedule daily stale cleanup (items accumulate between restarts)
-      setInterval(() => {
-        cleanupStaleItems(indiekit).catch((error) => {
-          console.warn("[Microsub] Scheduled stale cleanup failed:", error.message);
-        });
-      }, 24 * 60 * 60 * 1000);
+          // Cleanup old read items on startup
+          cleanupAllReadItems(indiekit).catch((error) => {
+            console.warn("[Microsub] Startup cleanup failed:", error.message);
+          });
+
+          // Delete stale items (stripped skeletons + unread older than 30 days)
+          cleanupStaleItems(indiekit).catch((error) => {
+            console.warn("[Microsub] Stale cleanup failed:", error.message);
+          });
+
+          // Schedule daily stale cleanup (items accumulate between restarts)
+          setInterval(() => {
+            cleanupStaleItems(indiekit).catch((error) => {
+              console.warn("[Microsub] Scheduled stale cleanup failed:", error.message);
+            });
+          }, 24 * 60 * 60 * 1000);
+        },
+        { label: "Microsub" },
+      );
     } else {
       console.warn(
         "[Microsub] Database not available at init, scheduler not started",
@@ -245,6 +252,7 @@ export default class MicrosubEndpoint {
    * Cleanup on shutdown
    */
   destroy() {
+    this._stopGate?.();
     stopScheduler();
   }
 }
