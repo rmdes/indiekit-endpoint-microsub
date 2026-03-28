@@ -687,6 +687,15 @@ const feeds = await collection.find({ "websub.hub": { $exists: true } }).toArray
 - Verify callback URL is publicly accessible
 - Check logs for hub verification failures
 
+## Startup Gate
+
+This plugin uses `@rmdes/indiekit-startup-gate` to defer background tasks until the host signals readiness (after Eleventy build completes). This prevents resource contention during the build.
+
+**Deferred:** `startScheduler()`, `ensureActivityPubChannel()`, cleanup tasks, 24h cleanup interval
+**Immediate:** Routes, `createIndexes()`
+
+See workspace CLAUDE.md for the full startup-gate pattern. Any new background tasks added to this plugin MUST be wrapped in `waitForReady()`.
+
 ## Future Improvements
 
 - WebSub lease renewal (currently expires after `leaseSeconds`)
