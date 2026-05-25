@@ -12,11 +12,11 @@ import { asyncHandler } from "./lib/utils/async-handler.js";
 import { handleMediaProxy } from "./lib/media/proxy.js";
 import { csrfToken, csrfValidate } from "./lib/utils/csrf.js";
 import { startScheduler, stopScheduler } from "./lib/polling/scheduler.js";
-import { ensureActivityPubChannel } from "./lib/storage/channels.js";
 import { createIndexes } from "./lib/storage/items.js";
 import {
   cleanupAllReadItems,
   cleanupStaleItems,
+  removeActivityPubData,
 } from "./lib/storage/items-retention.js";
 import { webmentionReceiver } from "./lib/webmention/receiver.js";
 import { websubHandler } from "./lib/websub/handler.js";
@@ -133,9 +133,6 @@ export default class MicrosubEndpoint {
     readerRouter.get("/search", asyncHandler(readerController.searchPage));
     readerRouter.post("/search", asyncHandler(readerController.searchFeeds));
     readerRouter.post("/subscribe", asyncHandler(readerController.subscribe));
-    readerRouter.get("/actor", asyncHandler(readerController.actorProfile));
-    readerRouter.post("/actor/follow", asyncHandler(readerController.followActorAction));
-    readerRouter.post("/actor/unfollow", asyncHandler(readerController.unfollowActorAction));
     readerRouter.post("/api/mark-read", asyncHandler(readerController.markAllRead));
     readerRouter.post("/api/mark-view-read", asyncHandler(readerController.markViewRead));
     readerRouter.get("/opml", opmlController.exportOpml);
@@ -214,10 +211,11 @@ export default class MicrosubEndpoint {
           console.info("[Microsub] Starting scheduler and maintenance tasks");
           startScheduler(indiekit);
 
-          // Ensure system channels exist
-          ensureActivityPubChannel(indiekit).catch((error) => {
+          // One-time migration: drop the abandoned "Fediverse" channel and its
+          // items. Idempotent — does nothing once the channel is gone.
+          removeActivityPubData(indiekit).catch((error) => {
             console.warn(
-              "[Microsub] ActivityPub channel creation failed:",
+              "[Microsub] ActivityPub data removal failed:",
               error.message,
             );
           });

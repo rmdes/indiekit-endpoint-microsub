@@ -5,7 +5,7 @@
 `@rmdes/indiekit-endpoint-microsub` is a comprehensive Microsub social reader plugin for Indiekit. It implements the Microsub protocol for subscribing to feeds, organizing them into channels, and reading posts in a unified timeline interface. The plugin provides both a Microsub API endpoint (for compatible clients) and a built-in web-based reader UI.
 
 **Package Name:** `@rmdes/indiekit-endpoint-microsub`
-**Version:** 1.0.30
+**Version:** 1.0.62
 **Type:** ESM module
 **Entry Point:** `index.js`
 
@@ -226,6 +226,21 @@ Blocked authors (delete all posts from author URL).
 }
 ```
 
+### `microsub_deck_config`
+
+Per-user deck (multi-column reader) configuration.
+
+```javascript
+{
+  _id: ObjectId,
+  userId: "user-id",
+  channelIds: ["uid1", "uid2", "uid3"],   // Ordered list of channel UIDs shown as columns
+  updatedAt: "2026-02-13T..."
+}
+```
+
+Storage helpers live in `lib/storage/deck.js` (`getDeckConfig()`, `saveDeckConfig()`).
+
 ## Key Files and Modules
 
 ### Core Entry Point
@@ -243,13 +258,20 @@ Blocked authors (delete all posts from author URL).
 - Routes GET/POST requests by `action` parameter
 - Calls specialized controllers (channels, timeline, follow, mute, block, search, preview, events)
 
-**`lib/controllers/reader.js`**
-- Web UI controller for reader interface
-- Channel management (list, create, delete, settings)
-- Feed management (add, remove, edit, rediscover, refresh)
-- Timeline rendering (pagination, read/unread filtering)
-- Compose form (reply, like, repost, bookmark via Micropub)
-- Search and discovery UI
+**`lib/controllers/reader/`** (directory — was previously a single `reader.js`, split for modularity)
+
+The reader Web UI is implemented across these sub-modules, all aggregated by `reader/index.js`:
+
+- **`reader/index.js`** — Composes the public controller surface. Re-exports handlers from sibling files so `index.js` can `import { readerController }` and access everything via dot notation (e.g. `readerController.channel`, `readerController.timeline`).
+- **`reader/channel.js`** — Channel CRUD (list, new, create, delete) and settings (form + update). Also serves `/channels/:uid/html` AJAX HTML fragments for infinite scroll inside a channel timeline.
+- **`reader/feed.js`** — Feed management within a channel (list, add, remove, details, edit URL, refresh on demand).
+- **`reader/feed-repair.js`** — Feed health operations: rediscover (re-run discovery against the source URL) and the diagnostics surface for broken feeds.
+- **`reader/timeline.js`** — Cross-channel timeline and its AJAX HTML fragment (`/timeline`, `/timeline/html`). Also implements `markAllRead` and `markViewRead` (mark only the currently-visible items).
+- **`reader/compose.js`** — Compose form (reply/like/repost/bookmark). Renders the form and posts to Micropub.
+- **`reader/search.js`** — Reader-side feed discovery: search page, search submission, subscribe-from-results.
+- **`reader/deck.js`** — Multi-column "deck" reader view and its settings (saves to `microsub_deck_config`).
+
+Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the aggregator but live in `reader/timeline.js` and `lib/controllers/opml.js` respectively.
 
 **`lib/controllers/channels.js`**
 - Microsub API: `action=channels`
@@ -299,14 +321,29 @@ Blocked authors (delete all posts from author URL).
 - `updateFeedStatus()` - Tracks errors and health
 - `getFeedsWithErrors()` - Admin diagnostics
 
-**`lib/storage/items.js`**
+**`lib/storage/items.js`** — Core item CRUD only (read state, retention, and search were extracted to siblings below).
 - `addItem()` - Inserts item (dedup by `channelId + uid`)
-- `getTimelineItems()` - Paginated timeline with before/after cursors
+- `getCollection()`, `transformToJf2()` - Internal helpers
+- `getTimelineItems()` - Paginated channel timeline with before/after cursors
+- `getAllTimelineItems()` - Cross-channel timeline (powers `/reader/timeline`)
 - `getItemById()`, `getItemsByUids()`
-- `markItemsRead()`, `markItemsUnread()` - Per-user read state
-- `removeItems()` - Delete items by ID/UID/URL
-- `cleanupAllReadItems()` - Startup cleanup, keeps last 30 read per channel
+- `removeItems()`, `deleteItemsForChannel()`, `deleteItemsForFeed()`, `deleteItemsByAuthorUrl()`
 - `createIndexes()` - Creates MongoDB indexes
+
+**`lib/storage/items-read-state.js`** — Per-user read tracking (split from `items.js`).
+- `markItemsRead()`, `markItemsUnread()`, `markFeedItemsRead()`
+- `countReadItems()`, `getUnreadCount()`
+- Internally calls `cleanupOldReadItems()` after each mark-read to enforce the 30-item-per-channel cap.
+
+**`lib/storage/items-retention.js`** — Database housekeeping (split from `items.js`).
+- `cleanupAllReadItems()` - Startup cleanup, keeps last 30 read per channel
+- `cleanupStaleItems()` - Deletes stripped skeleton items and unread items older than 30 days (runs on startup and daily)
+
+**`lib/storage/items-search.js`** — Item text search (split from `items.js`).
+- `searchItems()` - Regex-escaped text query over MongoDB text index
+
+**`lib/storage/deck.js`** — Deck (multi-column reader) configuration.
+- `getDeckConfig()`, `saveDeckConfig()` - Per-user channel ordering for the deck view
 
 **`lib/storage/filters.js`**
 - `getMutedUrls()`, `addMutedUrl()`, `removeMutedUrl()`
@@ -314,7 +351,7 @@ Blocked authors (delete all posts from author URL).
 
 **`lib/storage/read-state.js`**
 - `getReadState()`, `markRead()`, `markUnread()`
-- Wraps `items.js` read operations
+- Thin wrapper around `items-read-state.js` for the Microsub API surface
 
 ### Feed Processing
 
@@ -335,7 +372,19 @@ Blocked authors (delete all posts from author URL).
 - `parseHfeed()` - Parses h-feed microformats using `microformats-parser`
 
 **`lib/feeds/normalizer.js`**
-- `normalizeItem()` - Converts parsed items to jf2 format
+- `normalizeItem()` - Dispatcher that routes to the per-format normalizer based on feed type
+
+**`lib/feeds/normalizer-rss.js`** / **`normalizer-atom` (combined inside `normalizer-rss.js`)**
+- Format-specific normalization for RSS 2.0 and RSS 1.0 / Atom items into jf2
+
+**`lib/feeds/normalizer-jsonfeed.js`**
+- JSON Feed 1.x → jf2 mapping (handles `content_html` vs `content_text`, attachments, etc.)
+
+**`lib/feeds/normalizer-hfeed.js`**
+- h-feed microformats → jf2 mapping (handles `properties.*` arrays from microformats-parser)
+
+**`lib/feeds/capabilities.js`**
+- Detects feed capabilities (e.g. WebSub hub presence, jf2 properties available) used by the scheduler and UI
 
 **`lib/feeds/fetcher.js`**
 - `fetchFeed()` - HTTP fetch with User-Agent, timeout, redirect handling
@@ -392,6 +441,7 @@ Blocked authors (delete all posts from author URL).
 - `handleMediaProxy()` - GET /microsub/media/:hash
 - Fetches and caches external images, serves with correct Content-Type
 - Hash is base64url(url)
+- Includes `isPrivateUrl()` SSRF blocklist (loopback, RFC 1918, link-local) — see Security Hardening
 
 **`lib/utils/auth.js`**
 - `getUserId()` - Extracts user ID from session (defaults to "default" for single-user)
@@ -412,11 +462,30 @@ Blocked authors (delete all posts from author URL).
 - On follow: upserts blog entry with `source: "microsub"`
 - On unfollow: soft-deletes blog entry
 
+**`lib/utils/async-handler.js`**
+- `asyncHandler(fn)` - Wraps async Express handlers so rejected promises propagate to error middleware. All reader routes pass through this wrapper.
+
+**`lib/utils/csrf.js`**
+- `csrfToken` middleware - Generates and exposes a per-session CSRF token to templates
+- `csrfValidate` middleware - Validates token on every POST to the reader router (required for form-encoded admin actions)
+
+**`lib/utils/html.js`**
+- HTML manipulation helpers used during feed parsing and timeline rendering (link rewriting, fragment extraction)
+
+**`lib/utils/sanitize.js`**
+- Centralized `sanitize-html` configuration (allowlist of tags/attrs) shared by webmention storage and feed content normalization
+
+**`lib/utils/source-type.js`**
+- Classifies an item's `source` (feed vs webmention vs ActivityPub vs direct) so the UI can badge items correctly
+
+**`lib/utils/constants.js`**
+- Shared constants (polling tier table, max-read-items cap, default User-Agent, mount-path defaults)
+
 **`lib/cache/redis.js`**
 - Optional Redis caching (not currently used in core)
 
 **`lib/search/indexer.js` / `query.js`**
-- Full-text search on items (uses MongoDB text index)
+- Full-text search on items (uses MongoDB text index). Public entry point lives in `lib/storage/items-search.js`.
 
 **`lib/realtime/broker.js`**
 - SSE (Server-Sent Events) broker for real-time notifications
@@ -447,12 +516,14 @@ export default {
 | GET | `/microsub/reader/channels/new` | New channel form |
 | POST | `/microsub/reader/channels/new` | Create channel |
 | GET | `/microsub/reader/channels/:uid` | Channel timeline |
+| GET | `/microsub/reader/channels/:uid/html` | Channel timeline HTML fragment (AJAX / infinite scroll) |
 | GET | `/microsub/reader/channels/:uid/settings` | Channel settings form |
 | POST | `/microsub/reader/channels/:uid/settings` | Update settings |
 | POST | `/microsub/reader/channels/:uid/delete` | Delete channel |
 | GET | `/microsub/reader/channels/:uid/feeds` | List feeds in channel |
 | POST | `/microsub/reader/channels/:uid/feeds` | Add feed to channel |
 | POST | `/microsub/reader/channels/:uid/feeds/remove` | Remove feed |
+| GET | `/microsub/reader/channels/:uid/feeds/:feedId` | Feed details (status, last fetch, errors) |
 | GET | `/microsub/reader/channels/:uid/feeds/:feedId/edit` | Edit feed form |
 | POST | `/microsub/reader/channels/:uid/feeds/:feedId/edit` | Update feed URL |
 | POST | `/microsub/reader/channels/:uid/feeds/:feedId/rediscover` | Run feed discovery |
@@ -463,8 +534,18 @@ export default {
 | GET | `/microsub/reader/search` | Search/discover feeds page |
 | POST | `/microsub/reader/search` | Search feeds |
 | POST | `/microsub/reader/subscribe` | Subscribe from search results |
-| POST | `/microsub/reader/api/mark-read` | Mark all items read |
+| POST | `/microsub/reader/api/mark-read` | Mark all items in channel read |
+| POST | `/microsub/reader/api/mark-view-read` | Mark only currently-visible items read |
 | GET | `/microsub/reader/opml` | Export OPML |
+| GET | `/microsub/reader/timeline` | Cross-channel unified timeline |
+| GET | `/microsub/reader/timeline/html` | Cross-channel timeline HTML fragment (AJAX / infinite scroll) |
+| GET | `/microsub/reader/deck` | Multi-column deck reader view |
+| GET | `/microsub/reader/deck/settings` | Deck settings form (choose channels/order) |
+| POST | `/microsub/reader/deck/settings` | Save deck configuration |
+
+All reader POST routes are CSRF-protected via `csrfValidate` middleware (token issued by `csrfToken`). All routes run through `asyncHandler()` so rejected promises surface to Express error middleware.
+
+Public endpoints (`websub`, `webmention`, `media`) are rate-limited (120/min for media, 30/min for websub, 10/min for webmention).
 
 ### Public (no auth)
 
@@ -518,7 +599,9 @@ micropubData.append("in-reply-to", replyToUrl);
 micropubData.append("content", content);
 ```
 
-## Security Hardening (v1.0.30)
+## Security Hardening (introduced in v1.0.30)
+
+> **Historical marker.** These fixes shipped in v1.0.30 (commit 3c8a4b2). They are still in force in the current release (see top of file for current version). The section heading uses the historical version on purpose so future security work can stack new dated sections under it.
 
 The following security fixes were applied in version 1.0.30 (commit 3c8a4b2):
 
@@ -537,7 +620,7 @@ Also changed the error fallback from `response.redirect(url)` (open redirect) to
 
 ### ReDoS Prevention in Search
 
-**File:** `lib/storage/items.js`
+**File:** `lib/storage/items-search.js` (formerly inside `lib/storage/items.js` before the items split)
 
 The `searchItems()` function built a regex from user input without escaping special characters. A crafted search query could cause catastrophic backtracking.
 
@@ -581,10 +664,11 @@ Templates use `| date("PPp")` filter which requires ISO strings, so `transformTo
 ### Read State Cleanup
 
 Only the last 30 read items per channel are kept. Cleanup runs:
-- On startup: `cleanupAllReadItems()`
-- After marking items read: `cleanupOldReadItems()`
+- On startup: `cleanupAllReadItems()` (in `lib/storage/items-retention.js`)
+- After marking items read: `cleanupOldReadItems()` (internal helper inside `lib/storage/items-read-state.js`, called by `markItemsRead()` / `markFeedItemsRead()`)
+- Daily (24h interval): `cleanupStaleItems()` deletes stripped skeleton items and unread items older than 30 days
 
-This prevents database bloat. Unread items are never deleted by cleanup.
+This prevents database bloat. Unread items younger than 30 days are never deleted by cleanup.
 
 ### Feed Discovery Gotchas
 
@@ -691,7 +775,7 @@ const feeds = await collection.find({ "websub.hub": { $exists: true } }).toArray
 
 This plugin uses `@rmdes/indiekit-startup-gate` to defer background tasks until the host signals readiness (after Eleventy build completes). This prevents resource contention during the build.
 
-**Deferred:** `startScheduler()`, `ensureActivityPubChannel()`, cleanup tasks, 24h cleanup interval
+**Deferred:** `startScheduler()`, cleanup tasks, one-time AP-data removal migration, 24h cleanup interval
 **Immediate:** Routes, `createIndexes()`
 
 See workspace CLAUDE.md for the full startup-gate pattern. Any new background tasks added to this plugin MUST be wrapped in `waitForReady()`.
