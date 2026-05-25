@@ -49,6 +49,43 @@
         value: channel.settings.excludeRegex
       }) }}
 
+      {% if channel.uid !== "notifications" %}
+      <fieldset class="ms-retention-settings">
+        <legend>{{ __("microsub.settings.retentionTitle") }}</legend>
+        <p class="hint">{{ __("microsub.settings.retentionHelp") }}</p>
+
+        {{ input({
+          id: "maxItems",
+          name: "maxItems",
+          type: "number",
+          label: __("microsub.settings.maxItems"),
+          hint: __("microsub.settings.maxItemsHelp", { default: retentionDefaults.maxItems }),
+          attributes: { min: 10, max: 100000, placeholder: retentionDefaults.maxItems },
+          value: channel.settings.maxItems
+        }) }}
+
+        {{ input({
+          id: "maxItemsPerFeed",
+          name: "maxItemsPerFeed",
+          type: "number",
+          label: __("microsub.settings.maxItemsPerFeed"),
+          hint: __("microsub.settings.maxItemsPerFeedHelp", { default: retentionDefaults.maxItemsPerFeed }),
+          attributes: { min: 1, max: 10000, placeholder: retentionDefaults.maxItemsPerFeed },
+          value: channel.settings.maxItemsPerFeed
+        }) }}
+
+        {{ input({
+          id: "maxUnreadAgeDays",
+          name: "maxUnreadAgeDays",
+          type: "number",
+          label: __("microsub.settings.maxUnreadAgeDays"),
+          hint: __("microsub.settings.maxUnreadAgeDaysHelp", { default: retentionDefaults.maxUnreadAgeDays }),
+          attributes: { min: 1, max: 3650, placeholder: retentionDefaults.maxUnreadAgeDays },
+          value: channel.settings.maxUnreadAgeDays
+        }) }}
+      </fieldset>
+      {% endif %}
+
       <div class="button-group">
         {{ button({
           text: __("microsub.settings.save")

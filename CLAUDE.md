@@ -5,7 +5,7 @@
 `@rmdes/indiekit-endpoint-microsub` is a comprehensive Microsub social reader plugin for Indiekit. It implements the Microsub protocol for subscribing to feeds, organizing them into channels, and reading posts in a unified timeline interface. The plugin provides both a Microsub API endpoint (for compatible clients) and a built-in web-based reader UI.
 
 **Package Name:** `@rmdes/indiekit-endpoint-microsub`
-**Version:** 1.0.62
+**Version:** 1.0.63
 **Type:** ESM module
 **Entry Point:** `index.js`
 
@@ -336,8 +336,9 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 - Internally calls `cleanupOldReadItems()` after each mark-read to enforce the 30-item-per-channel cap.
 
 **`lib/storage/items-retention.js`** — Database housekeeping (split from `items.js`).
-- `cleanupAllReadItems()` - Startup cleanup, keeps last 30 read per channel
-- `cleanupStaleItems()` - Deletes stripped skeleton items and unread items older than 30 days (runs on startup and daily)
+- `cleanupAllReadItems()` - Startup cleanup. For each channel/user, items beyond `MAX_FULL_READ_ITEMS` (200) that are *read* get stripped to skeletons (kept for dedup, content removed). Read items younger than that threshold stay intact.
+- `cleanupStaleItems()` - **Per-channel retention enforcement.** For each channel except `notifications`, applies (1) stale-item deletion, (2) per-feed cap, (3) channel-wide cap. Each channel uses its own `channel.settings.{maxItems,maxItemsPerFeed,maxUnreadAgeDays}` if set; otherwise falls back to the module defaults `DEFAULT_MAX_ITEMS` (1000), `DEFAULT_MAX_ITEMS_PER_FEED` (50), `DEFAULT_MAX_UNREAD_AGE_DAYS` (30). The `notifications` channel is exempt — webmentions are high-signal and kept indefinitely.
+- `removeActivityPubData()` - One-time idempotent migration that drops the abandoned "Fediverse" channel and its items. Runs on every startup; no-op once the data is gone.
 
 **`lib/storage/items-search.js`** — Item text search (split from `items.js`).
 - `searchItems()` - Regex-escaped text query over MongoDB text index
@@ -663,12 +664,31 @@ Templates use `| date("PPp")` filter which requires ISO strings, so `transformTo
 
 ### Read State Cleanup
 
-Only the last 30 read items per channel are kept. Cleanup runs:
-- On startup: `cleanupAllReadItems()` (in `lib/storage/items-retention.js`)
-- After marking items read: `cleanupOldReadItems()` (internal helper inside `lib/storage/items-read-state.js`, called by `markItemsRead()` / `markFeedItemsRead()`)
-- Daily (24h interval): `cleanupStaleItems()` deletes stripped skeleton items and unread items older than 30 days
+Three layered mechanisms:
 
-This prevents database bloat. Unread items younger than 30 days are never deleted by cleanup.
+- **On read**: `cleanupOldReadItems()` (internal helper inside `lib/storage/items-read-state.js`, called by `markItemsRead()` / `markFeedItemsRead()`) keeps only the last 30 read items per channel for each user.
+- **On startup**: `cleanupAllReadItems()` (in `lib/storage/items-retention.js`) strips read items beyond `MAX_FULL_READ_ITEMS` (200) per channel/user to skeletons — keeps the `_id` for dedup, drops the content.
+- **On startup + every 24h**: `cleanupStaleItems()` applies per-channel retention. See "Per-channel retention" below.
+
+### Per-channel retention (introduced in v1.0.63)
+
+`cleanupStaleItems()` runs the following passes for every channel except `notifications`:
+
+1. **Stale deletion** — drop unread items and stripped skeletons older than `maxUnreadAgeDays`.
+2. **Per-feed cap** — for each feed in the channel, keep most recent `maxItemsPerFeed` items, hard-delete the rest. Runs *before* the channel cap so one prolific feed cannot starve other feeds in the channel.
+3. **Channel-wide cap** — keep most recent `maxItems` items in the channel total, hard-delete the rest. Catches items without `feedId` and anything still over the ceiling after the per-feed pass.
+
+| Setting | Default | Where it lives |
+|---|---|---|
+| `maxItems` | 1000 | `channel.settings.maxItems` (per-channel override; UI in `views/settings.njk`) |
+| `maxItemsPerFeed` | 50 | `channel.settings.maxItemsPerFeed` |
+| `maxUnreadAgeDays` | 30 | `channel.settings.maxUnreadAgeDays` |
+
+Defaults are exported as `DEFAULT_MAX_ITEMS`, `DEFAULT_MAX_ITEMS_PER_FEED`, `DEFAULT_MAX_UNREAD_AGE_DAYS` from `lib/storage/items-retention.js`. Empty form input falls back to the global default (stored as `undefined`, so future default changes apply automatically).
+
+**The `notifications` channel is exempt** from all three caps — webmentions are high-signal and may be kept indefinitely.
+
+**Why the design**: a high-volume aggregator channel (e.g., "smallweb" with 50 feeds, ~500 items/day) previously accumulated 30 × 500 = 15K unread items because nothing capped *unread items younger than 30 days*. The per-channel cap fixes this generically; per-feed sub-cap prevents one runaway feed from monopolising the channel cap; per-channel overrides let a curated low-volume channel keep a long tail while a firehose channel stays tight.
 
 ### Feed Discovery Gotchas
 
