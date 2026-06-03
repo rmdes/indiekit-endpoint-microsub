@@ -10,7 +10,6 @@
       "showRead": "Show read ({{count}})",
       "hideRead": "Hide read items",
       "allRead": "All caught up!",
-      "newer": "Newer",
       "older": "Older"
     },
     "channels": {
@@ -18,34 +17,21 @@
       "name": "Channel name",
       "new": "New channel",
       "create": "Create channel",
-      "delete": "Delete channel",
       "settings": "Channel settings",
-      "empty": "No channels yet. Create one to get started.",
-      "notifications": "Notifications"
+      "empty": "No channels yet. Create one to get started."
     },
     "timeline": {
-      "title": "Timeline",
       "empty": "No items in this channel",
-      "markRead": "Mark as read",
-      "markUnread": "Mark as unread",
-      "remove": "Remove"
+      "markRead": "Mark as read"
     },
     "feeds": {
       "title": "Feeds",
       "follow": "Follow",
       "subscribe": "Subscribe to a feed",
-      "unfollow": "Unfollow",
       "empty": "No feeds followed in this channel",
       "url": "Feed URL",
       "urlPlaceholder": "https://example.com/feed.xml",
-      "edit": "Edit feed",
-      "rediscover": "Rediscover feed",
-      "refresh": "Refresh now",
-      "status": {
-        "active": "Active",
-        "error": "Error",
-        "stale": "Stale"
-      }
+      "edit": "Edit feed"
     },
     "item": {
       "reply": "Reply",
@@ -101,20 +87,10 @@
       "submit": "Search",
       "noResults": "No results found"
     },
-    "preview": {
-      "title": "Preview",
-      "subscribe": "Subscribe to this feed"
-    },
     "views": {
       "channels": "Channels",
       "deck": "Deck",
       "timeline": "Timeline"
-    },
-    "error": {
-      "channelNotFound": "Channel not found",
-      "feedNotFound": "Feed not found",
-      "invalidUrl": "Invalid URL",
-      "invalidAction": "Invalid action"
     }
   }
 }
