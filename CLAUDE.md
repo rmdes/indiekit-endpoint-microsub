@@ -340,9 +340,6 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 - `cleanupStaleItems()` - **Per-channel retention enforcement.** For each channel except `notifications`, applies (1) stale-item deletion, (2) per-feed cap, (3) channel-wide cap. Each channel uses its own `channel.settings.{maxItems,maxItemsPerFeed,maxUnreadAgeDays}` if set; otherwise falls back to the module defaults `DEFAULT_MAX_ITEMS` (1000), `DEFAULT_MAX_ITEMS_PER_FEED` (50), `DEFAULT_MAX_UNREAD_AGE_DAYS` (30). The `notifications` channel is exempt — webmentions are high-signal and kept indefinitely.
 - `removeActivityPubData()` - One-time idempotent migration that drops the abandoned "Fediverse" channel and its items. Runs on every startup; no-op once the data is gone.
 
-**`lib/storage/items-search.js`** — Item text search (split from `items.js`).
-- `searchItems()` - Regex-escaped text query over MongoDB text index
-
 **`lib/storage/deck.js`** — Deck (multi-column reader) configuration.
 - `getDeckConfig()`, `saveDeckConfig()` - Per-user channel ordering for the deck view
 
@@ -485,8 +482,8 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 **`lib/cache/redis.js`**
 - Optional Redis caching (not currently used in core)
 
-**`lib/search/indexer.js` / `query.js`**
-- Full-text search on items (uses MongoDB text index). Public entry point lives in `lib/storage/items-search.js`.
+**`lib/search/query.js`**
+- Full-text search on items (uses MongoDB text index) with regex fallback. Public entry point is `searchWithFallback()`, consumed by `lib/controllers/search.js`. Text indexes themselves are created inline in `lib/storage/items.js` `createIndexes()`.
 
 **`lib/realtime/broker.js`**
 - SSE (Server-Sent Events) broker for real-time notifications
@@ -621,9 +618,9 @@ Also changed the error fallback from `response.redirect(url)` (open redirect) to
 
 ### ReDoS Prevention in Search
 
-**File:** `lib/storage/items-search.js` (formerly inside `lib/storage/items.js` before the items split)
+**File:** `lib/search/query.js` (the `searchItemsRegex()` function; originally applied to a since-removed `lib/storage/items-search.js` then carried into the live search path)
 
-The `searchItems()` function built a regex from user input without escaping special characters. A crafted search query could cause catastrophic backtracking.
+The regex fallback built a regex from user input without escaping special characters. A crafted search query could cause catastrophic backtracking.
 
 **Fix:** User input is escaped with `replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&")` before building the regex.
 
