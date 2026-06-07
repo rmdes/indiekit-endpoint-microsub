@@ -5,7 +5,7 @@
 `@rmdes/indiekit-endpoint-microsub` is a comprehensive Microsub social reader plugin for Indiekit. It implements the Microsub protocol for subscribing to feeds, organizing them into channels, and reading posts in a unified timeline interface. The plugin provides both a Microsub API endpoint (for compatible clients) and a built-in web-based reader UI.
 
 **Package Name:** `@rmdes/indiekit-endpoint-microsub`
-**Version:** 1.0.63
+**Version:** 1.0.65
 **Type:** ESM module
 **Entry Point:** `index.js`
 
@@ -319,14 +319,13 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 - `updateFeedAfterFetch()` - Adjusts tier based on content changes
 - `updateFeedWebsub()` - Stores WebSub subscription data
 - `updateFeedStatus()` - Tracks errors and health
-- `getFeedsWithErrors()` - Admin diagnostics
 
 **`lib/storage/items.js`** — Core item CRUD only (read state, retention, and search were extracted to siblings below).
 - `addItem()` - Inserts item (dedup by `channelId + uid`)
 - `getCollection()`, `transformToJf2()` - Internal helpers
 - `getTimelineItems()` - Paginated channel timeline with before/after cursors
 - `getAllTimelineItems()` - Cross-channel timeline (powers `/reader/timeline`)
-- `getItemById()`, `getItemsByUids()`
+- `getItemById()`
 - `removeItems()`, `deleteItemsForChannel()`, `deleteItemsForFeed()`, `deleteItemsByAuthorUrl()`
 - `createIndexes()` - Creates MongoDB indexes
 
@@ -343,13 +342,8 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 **`lib/storage/deck.js`** — Deck (multi-column reader) configuration.
 - `getDeckConfig()`, `saveDeckConfig()` - Per-user channel ordering for the deck view
 
-**`lib/storage/filters.js`**
-- `getMutedUrls()`, `addMutedUrl()`, `removeMutedUrl()`
-- `getBlockedAuthors()`, `addBlockedAuthor()`, `removeBlockedAuthor()`
-
-**`lib/storage/read-state.js`**
-- `getReadState()`, `markRead()`, `markUnread()`
-- Thin wrapper around `items-read-state.js` for the Microsub API surface
+**`lib/storage/filters.js`** — Pure-function filtering used during feed ingestion.
+- `passesTypeFilter()`, `passesRegexFilter()` - Per-channel exclude predicates called by `lib/polling/processor.js`. (Mute/block storage that previously lived in this module is now handled directly by `controllers/mute.js` and `controllers/block.js` against the `microsub_muted` and `microsub_blocked` collections.)
 
 ### Feed Processing
 
@@ -408,16 +402,15 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 - `processFeedBatch()` - Concurrent processing (default 5 feeds at once)
 
 **`lib/polling/tier.js`**
-- `getTierInterval()` - Maps tier (0-10) to polling interval
-- `adjustTier()` - Increases/decreases tier based on update frequency
+- `calculateNewTier()` - Decides the next polling tier after a fetch (sole exported entry; internal helpers handle interval math and next-fetch-time computation)
 
 ### Real-Time Updates
 
-**`lib/websub/discovery.js`**
-- `discoverWebsubHub()` - Parses feed for `<link rel="hub">` or `<atom:link rel="hub">`
-
 **`lib/websub/subscriber.js`**
-- `subscribeToHub()` - Sends WebSub subscribe request to hub
+- `subscribe()` - Sends WebSub subscribe request to a hub
+- `unsubscribe()` - Sends WebSub unsubscribe request
+- `verifySignature()` - Validates the X-Hub-Signature on incoming pushes
+- `getCallbackUrl()` - Builds the per-feed callback URL
 
 **`lib/websub/handler.js`**
 - `verify()` - Handles hub verification (GET /microsub/websub/:id)
@@ -745,8 +738,13 @@ Scheduler runs every 60 seconds. Check logs for `[Microsub] Processing N feeds d
 
 **Inspect feed errors:**
 ```javascript
-const feeds = await getFeedsWithErrors(application, 3);
-console.log(feeds.map(f => ({ url: f.url, error: f.lastError })));
+// Direct collection query — the previous getFeedsWithErrors() helper was
+// removed in 1.0.65 as it had no callers.
+const feeds = await application.collections
+  .get("microsub_feeds")
+  .find({ status: "error", consecutiveErrors: { $gte: 3 } })
+  .toArray();
+console.info(feeds.map(f => ({ url: f.url, error: f.lastError })));
 ```
 
 **Manual feed refresh:**
