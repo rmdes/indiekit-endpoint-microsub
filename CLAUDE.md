@@ -5,7 +5,7 @@
 `@rmdes/indiekit-endpoint-microsub` is a comprehensive Microsub social reader plugin for Indiekit. It implements the Microsub protocol for subscribing to feeds, organizing them into channels, and reading posts in a unified timeline interface. The plugin provides both a Microsub API endpoint (for compatible clients) and a built-in web-based reader UI.
 
 **Package Name:** `@rmdes/indiekit-endpoint-microsub`
-**Version:** 1.0.66
+**Version:** 1.0.67
 **Type:** ESM module
 **Entry Point:** `index.js`
 
@@ -381,6 +381,9 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 
 **`lib/feeds/fetcher.js`**
 - `fetchFeed()` - HTTP fetch with User-Agent, timeout, redirect handling
+
+**`lib/feeds/source-meta.js`** (v1.0.67)
+- `resolveSourceFeedMeta()` - Resolves an item-level `<source>` feed's metadata (name, photo, site url) with a 24h in-memory cache (negative-cached failures, 500-entry cap). Used by `polling/processor.js` to give items in aggregator feeds (RSS 2.0 item-level `<source url="...">`, e.g. rss.chat "all posts") their originating author's avatar. `normalizer-rss.js` captures the element as `_source.itemSource` and uses its title as the author name when the item has no explicit author. Old items ingested before this exist without per-item authors — remove + re-add the feed to re-ingest.
 
 **`lib/feeds/discovery.js`**
 - `discoverFeeds()` - Parses HTML `<link>` tags for RSS/Atom/JSON Feed
