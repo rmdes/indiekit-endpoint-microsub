@@ -50,25 +50,27 @@
   {% endif %}
 
   <a href="{{ baseUrl }}/item/{{ item._id }}" class="ms-item-card__link">
-    {# Author #}
-    {% if item.author %}
+    {# Author / source identity — prefer item author, fall back to feed source #}
+    {% set identityPhoto = item.author.photo or item._source.photo %}
+    {% set identityName = item.author.name or item._source.name %}
+    {% if identityName or identityPhoto %}
     <div class="ms-item-card__author">
       <div class="ms-item-card__avatar-wrap" data-avatar-fallback>
-        {% if item.author.photo %}
-        <img src="{{ item.author.photo }}"
+        {% if identityPhoto %}
+        <img src="{{ identityPhoto }}"
              alt=""
              class="ms-item-card__author-photo"
              width="40"
              height="40"
              loading="lazy">
         {% endif %}
-        <span class="ms-item-card__author-photo ms-item-card__author-photo--default" aria-hidden="true">{{ item.author.name[0] | upper if item.author.name else "?" }}</span>
+        <span class="ms-item-card__author-photo ms-item-card__author-photo--default" aria-hidden="true">{{ identityName[0] | upper if identityName else "?" }}</span>
       </div>
       <div class="ms-item-card__author-info">
-        <span class="ms-item-card__author-name">{{ item.author.name or "Unknown" }}</span>
-        {% if item._source %}
+        <span class="ms-item-card__author-name">{{ identityName or "Unknown" }}</span>
+        {% if item._source and (item._source.name or item._source.url) and item._source.name != identityName %}
         <span class="ms-item-card__source">{{ item._source.name or item._source.url }}</span>
-        {% elif item.author.url %}
+        {% elif item.author.url and item.author.name %}
         <span class="ms-item-card__source">{{ item.author.url | replace("https://", "") | replace("http://", "") }}</span>
         {% endif %}
       </div>

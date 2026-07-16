@@ -1379,6 +1379,14 @@
   white-space: nowrap;
 }
 
+.ms-item-card-compact__favicon {
+  border-radius: 3px;
+  height: 16px;
+  object-fit: cover;
+  vertical-align: -3px;
+  width: 16px;
+}
+
 .ms-item-card-compact__date {
   flex-shrink: 0;
   white-space: nowrap;

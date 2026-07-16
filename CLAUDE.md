@@ -5,7 +5,7 @@
 `@rmdes/indiekit-endpoint-microsub` is a comprehensive Microsub social reader plugin for Indiekit. It implements the Microsub protocol for subscribing to feeds, organizing them into channels, and reading posts in a unified timeline interface. The plugin provides both a Microsub API endpoint (for compatible clients) and a built-in web-based reader UI.
 
 **Package Name:** `@rmdes/indiekit-endpoint-microsub`
-**Version:** 1.0.65
+**Version:** 1.0.66
 **Type:** ESM module
 **Entry Point:** `index.js`
 
@@ -323,6 +323,7 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 **`lib/storage/items.js`** — Core item CRUD only (read state, retention, and search were extracted to siblings below).
 - `addItem()` - Inserts item (dedup by `channelId + uid`)
 - `getCollection()`, `transformToJf2()` - Internal helpers
+- `enrichItemsWithFeedSource()` (v1.0.66) - Read-time join against `microsub_feeds`: sets `_source.name` (feed title, hostname fallback), `_source.photo` (feed image/icon, `/favicon.ico` at the site origin as fallback), and `_source.url` (`feed.siteUrl || feed.url`) on jf2 items. Called by `getTimelineItems()`, `getAllTimelineItems()`, and `getItemById()` — one `$in` query per page. Works retroactively (no migration) and stays fresh when feed metadata improves. The cards (`item-card.njk`, `item-card-compact.njk`) render this as a source avatar/favicon + name; `processor.js` stores `siteUrl` from the parsed channel link / `home_page_url`.
 - `getTimelineItems()` - Paginated channel timeline with before/after cursors
 - `getAllTimelineItems()` - Cross-channel timeline (powers `/reader/timeline`)
 - `getItemById()`

@@ -18,7 +18,10 @@
       {% endif %}
       <div class="ms-item-card-compact__meta">
         {% if item._source %}
-        <span class="ms-item-card-compact__source">{{ item._source.name or item._source.url }}</span>
+        <span class="ms-item-card-compact__source">
+          {%- if item._source.photo %}<img src="{{ item._source.photo }}" alt="" class="ms-item-card-compact__favicon" width="16" height="16" loading="lazy"> {% endif -%}
+          {{- item._source.name or item._source.url -}}
+        </span>
         {% elif item.author %}
         <span class="ms-item-card-compact__source">{{ item.author.name }}</span>
         {% endif %}
