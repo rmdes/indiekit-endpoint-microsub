@@ -44,7 +44,7 @@
     "feedparser": "^2.2.10",
     "ioredis": "^5.3.0",
     "microformats-parser": "^2.0.0",
-    "express-rate-limit": "^7.0.0",
+    "express-rate-limit": "^8.0.0",
     "safe-regex2": "^4.0.0",
     "sanitize-html": "^2.11.0"
   },
