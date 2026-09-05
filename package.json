@@ -45,6 +45,7 @@
     "ioredis": "^6.0.0",
     "microformats-parser": "^2.0.0",
     "express-rate-limit": "^8.0.0",
+    "mongodb": "^7.5.0",
     "safe-regex2": "^5.0.0",
     "sanitize-html": "^2.11.0"
   },
