@@ -436,7 +436,7 @@ Single-item view (`/item/:id`) and OPML export (`/opml`) are exposed through the
 - `handleMediaProxy()` - GET /microsub/media/:hash
 - Fetches and caches external images, serves with correct Content-Type
 - Hash is base64url(url)
-- Includes `isPrivateUrl()` SSRF blocklist (loopback, RFC 1918, link-local) — see Security Hardening
+- Exports `safeFetch()`: the ONLY way to fetch an untrusted URL (feeds, webmention sources, WebSub hubs, search, endpoint discovery, images). It re-checks `isPrivateUrl()` (every resolved address, full reserved-range list) on each redirect hop, max 5 — see Security Hardening
 
 **`lib/utils/auth.js`**
 - `getUserId()` - Extracts user ID from session (defaults to "default" for single-user)
@@ -610,6 +610,10 @@ The media proxy (`/microsub/media/:hash`) previously accepted any URL, including
 - `localhost`, `127.x.x.x`, `::1` (loopback)
 - `10.x.x.x`, `172.16-31.x.x`, `192.168.x.x` (RFC 1918 private ranges)
 - `169.254.x.x` (link-local/cloud metadata)
+
+**1.0.69 (Strix pentest #17):** the check ran on the first URL only, then `fetch` followed redirects unchecked, and the list missed 100.64/10, 192.0.0/24, 198.18/15, IPv6 ULA/link-local and IPv4-mapped IPv6. Now every outbound fetch of an untrusted URL goes through `safeFetch()` (`redirect: "manual"`, each hop re-checked, all DNS answers checked). Known gap: fetch resolves the name again after the check (DNS rebinding window), see the `ponytail:` note. Without `SECRET`, media URLs are signed with a per-process random key, not a public literal.
+
+**1.0.69 (Strix pentest #15):** `requireScope` (`lib/utils/auth.js`, `router.use` on the authenticated router) enforces Microsub scopes: GET and timeline/search/preview → `read`, channels → `channels`, (un)follow → `follow`, (un)mute → `mute`, (un)block → `block`; reader UI → `read` (GET) or `read follow channels` (POST). The owner's admin session holds `create update delete media` (core's login request) and no Microsub scope, so a session holding all four is let through; drop that once core's login asks for Microsub scopes.
 
 Also changed the error fallback from `response.redirect(url)` (open redirect) to `response.status(404).send("Image not available")`.
 

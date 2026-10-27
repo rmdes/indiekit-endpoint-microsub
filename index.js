@@ -9,6 +9,7 @@ import { microsubController } from "./lib/controllers/microsub.js";
 import { opmlController } from "./lib/controllers/opml.js";
 import { readerController } from "./lib/controllers/reader/index.js";
 import { asyncHandler } from "./lib/utils/async-handler.js";
+import { requireScope } from "./lib/utils/auth.js";
 import { handleMediaProxy } from "./lib/media/proxy.js";
 import { csrfToken, csrfValidate } from "./lib/utils/csrf.js";
 import { startScheduler, stopScheduler } from "./lib/polling/scheduler.js";
@@ -77,6 +78,9 @@ export default class MicrosubEndpoint {
    * @returns {import("express").Router} Express router
    */
   get routes() {
+    // Every authenticated route checks the token's Microsub scope first
+    router.use(requireScope);
+
     // Main Microsub endpoint - dispatches based on action parameter
     router.get("/", microsubController.get);
     router.post("/", microsubController.post);
